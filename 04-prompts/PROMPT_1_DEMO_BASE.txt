@@ -1,0 +1,195 @@
+Quiero que construyas desde cero una DEMO VISUAL COMPLETA de una plataforma SaaS llamada “Prendé”.
+
+IMPORTANTE:
+- No backend
+- No base de datos real
+- No autenticación real
+- Todo frontend con datos simulados
+- Debe ser completamente navegable e interactiva
+- Debe quedar lista para mostrar a clientes
+
+CONTEXTO DEL PRODUCTO
+Prendé es una plataforma privada para gestión interna de clubes de membresía en Uruguay.
+
+La plataforma está pensada para:
+- organización interna
+- comunicación del club
+- comunidad privada entre socios
+- contenido educativo
+- gestión administrativa
+
+NO es una tienda pública de cannabis.
+
+RESTRICCIONES LEGALES (MUY IMPORTANTE)
+- NO incluir venta directa de cannabis
+- NO incluir ecommerce de cannabis
+- NO mostrar precios de cannabis
+- NO incentivar consumo
+- NO incluir lenguaje promocional de cannabis
+- todo debe presentarse como gestión interna privada del club
+
+SÍ incluir:
+- gestión interna del club
+- comunidad privada
+- contenido educativo
+- tienda separada SOLO para productos legales (hojillas, encendedores, accesorios)
+
+==================================================
+ESTILO VISUAL
+==================================================
+
+- cálido
+- claro
+- moderno
+- premium
+- mobile-first
+- profesional pero cercano
+- sensación de app real
+
+Inspiración:
+- Instagram (feed)
+- apps SaaS modernas
+- apps lifestyle
+
+PALETA:
+- beige claro
+- blanco
+- verde suave
+- terracota
+
+==================================================
+ESTRUCTURA DE LA DEMO
+==================================================
+
+1. HOME
+- hero atractivo
+- mensaje claro
+- CTA
+- secciones explicativas
+
+2. PANEL DEL CLUB
+- dashboard simple
+- socios activos
+- capacidad
+- lugares disponibles
+- botones rápidos:
+  - agregar socio
+  - registrar pago
+  - enviar aviso
+
+3. PANEL DEL SOCIO
+- estado de membresía
+- cuota
+- historial
+- acceso a comunidad
+- acceso a contenido
+
+4. COMUNIDAD (TIPO INSTAGRAM)
+- feed interno
+- el club puede publicar
+- los socios del mismo club también pueden publicar
+- likes
+- comentarios
+
+5. CHAT
+- chat global SOLO entre administradores de clubes
+- chat privado entre club y socios
+- mensajes privados entre socios del mismo club
+
+6. MENSAJES MASIVOS
+- botón para enviar aviso a todos los socios
+- textarea para escribir
+- botón enviar
+- historial de avisos
+
+7. INVENTARIO COMPLETO
+- productos internos
+- estado
+- cantidad
+- observaciones
+- categorías
+
+INCLUIR:
+- luces
+- fertilizantes
+- tierra / sustrato
+- macetas
+- semillas
+- herramientas
+- insumos
+
+8. PRÓXIMAMENTE
+- sección de novedades futuras del club
+- productos próximos
+- mejoras próximas
+
+9. ESTADÍSTICAS DEL USUARIO
+- mensual
+- anual
+- visual simple
+- tarjetas o gráficos
+
+10. ESTADÍSTICAS DEL CLUB
+- socios activos
+- capacidad
+- top 3 socios más activos
+- dashboard visual
+
+11. NOTICIAS EN TIEMPO REAL
+- sección de noticias del mundo sobre cannabis (regulación, cambios legales)
+- cards tipo noticias
+- estilo moderno
+
+12. CONTENIDO
+- recetas (viaje sin pánico)
+- artículos
+- tips
+- consumo consciente
+
+13. MÚSICA
+- sección visual tipo experiencia (simulada)
+
+14. SINDICATO DE CLUBES
+- sección visual conceptual
+
+15. GESTIÓN LEGAL
+- documentos
+- asambleas
+- cambios de responsables
+
+16. TIENDA LEGAL
+- hojillas
+- encendedores
+- accesorios
+- carrito simulado
+
+17. PLANES SaaS
+- básico
+- pro
+- premium
+- prueba gratis 7 días
+
+==================================================
+UX IMPORTANTE
+==================================================
+
+- panel del club: simple, claro, profesional
+- panel del socio: más visual, social
+- navegación fácil
+- todo coherente
+
+==================================================
+ENTREGA
+==================================================
+
+- index.html
+- styles.css
+- app.js
+
+TODO funcional en demo (simulado)
+
+Si es largo:
+entregar por partes pero COMPLETO.
+
+Sin explicaciones largas.
+Solo código.

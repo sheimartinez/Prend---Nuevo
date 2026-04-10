@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prendé - Gestión Premium de Clubes</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app-container">
+        
+        <!-- SIDEBAR -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">Prendé<span>.</span></div>
+                <button class="close-sidebar-btn" id="close-sidebar-btn"><i class="ph ph-x"></i></button>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <p class="nav-label">Introducción</p>
+                <a href="#" class="nav-item active" data-target="home"><i class="ph ph-house"></i> Home (Demo)</a>
+                <a href="#" class="nav-item" data-target="pricing"><i class="ph ph-credit-card"></i> Planes SaaS</a>
+
+                <p class="nav-label">Portales</p>
+                <a href="#" class="nav-item" data-target="club-panel"><i class="ph ph-squares-four"></i> Panel de Club</a>
+                <a href="#" class="nav-item" data-target="member-panel"><i class="ph ph-user"></i> Panel de Socio</a>
+                
+                <p class="nav-label">Interacción & Social</p>
+                <a href="#" class="nav-item" data-target="community"><i class="ph ph-users"></i> Comunidad</a>
+                <a href="#" class="nav-item" data-target="chat"><i class="ph ph-chats"></i> Chat</a>
+                <a href="#" class="nav-item" data-target="mass-messages"><i class="ph ph-megaphone"></i> Mensajes Masivos</a>
+                
+                <p class="nav-label">Directiva & Operaciones</p>
+                <a href="#" class="nav-item" data-target="inventory"><i class="ph ph-package"></i> Inventario Interno</a>
+                <a href="#" class="nav-item" data-target="stats-club"><i class="ph ph-chart-bar"></i> Stats Club</a>
+                <a href="#" class="nav-item" data-target="stats-user"><i class="ph ph-chart-pie"></i> Stats Socio</a>
+                <a href="#" class="nav-item" data-target="legal"><i class="ph ph-bank"></i> Gestión Legal</a>
+                <a href="#" class="nav-item" data-target="syndicate"><i class="ph ph-handshake"></i> Sindicato</a>
+                
+                <p class="nav-label">Living (Contenidos & Store)</p>
+                <a href="#" class="nav-item" data-target="store"><i class="ph ph-shopping-bag"></i> Tienda Legal</a>
+                <a href="#" class="nav-item" data-target="content"><i class="ph ph-book-open"></i> Cultura & Ops</a>
+                <a href="#" class="nav-item" data-target="news"><i class="ph ph-newspaper"></i> Noticias Mundo</a>
+                <a href="#" class="nav-item" data-target="music"><i class="ph ph-music-notes"></i> Música / Ambient</a>
+                <a href="#" class="nav-item" data-target="soon"><i class="ph ph-sparkle"></i> Próximamente</a>
+            </nav>
+        </aside>
+
+        <!-- MAIN WINDOW -->
+        <main class="main-content">
+            
+            <header class="topbar">
+                <button class="mobile-menu-btn" id="mobile-menu-btn"><i class="ph ph-list"></i></button>
+                <div class="user-profile">
+                    <button class="btn-icon"><i class="ph ph-bell"></i></button>
+                    <div class="avatar" style="background-image: url('https://i.pravatar.cc/150?u=a042581f4e29026704d');"></div>
+                    <span class="user-name">Administrador</span>
+                </div>
+            </header>
+
+            <div class="sections-container">
+                
+                <!-- 1. HOME -->
+                <section id="home" class="view-section active">
+                    <div class="hero">
+                        <div class="hero-tag">SaaS Exclusivo Uruguay</div>
+                        <h1>Elevá la gestión<br>de tu club al <span>siguiente nivel</span>.</h1>
+                        <p>Prendé es el software integral, privado y seguro diseñado específicamente para la administración de clubes, comunicación de socios y gestión legal interna.</p>
+                        <div class="hero-actions">
+                            <button class="btn btn-primary btn-large" onclick="app.navTo('pricing')">Ver Planes</button>
+                            <button class="btn btn-outline btn-large" onclick="app.navTo('club-panel')"><i class="ph ph-play-circle"></i> Explorar Demo</button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 2. PANEL DEL CLUB -->
+                <section id="club-panel" class="view-section">
+                    <div class="section-header">
+                        <h2>Panel del Club</h2>
+                        <div class="header-actions">
+                            <button class="btn btn-primary" onclick="alert('Simulación: Formulario de nuevo socio')"><i class="ph ph-plus"></i> Nuevo Socio</button>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-cards">
+                        <div class="card stat-card">
+                            <div class="stat-icon"><i class="ph ph-users"></i></div>
+                            <div class="stat-info">
+                                <span>Capacidad</span>
+                                <h3>42 / 45</h3>
+                                <div class="stat-sub text-green">3 lugares disponibles</div>
+                            </div>
+                        </div>
+                        <div class="card stat-card">
+                            <div class="stat-icon"><i class="ph ph-wallet"></i></div>
+                            <div class="stat-info">
+                                <span>Tesorería Mensual</span>
+                                <h3>Al día</h3>
+                                <div class="stat-sub text-neutral">90% cuotas pagas</div>
+                            </div>
+                        </div>
+                        <div class="card stat-card">
+                            <div class="stat-icon"><i class="ph ph-warning-circle"></i></div>
+                            <div class="stat-info">
+                                <span>Avisos Pendientes</span>
+                                <h3>2</h3>
+                                <div class="stat-sub text-alert">Requieren atención</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card mt-4">
+                        <div class="card-header">
+                            <h3>Gestión Rápida</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="quick-actions-grid">
+                                <button class="action-btn" onclick="alert('Simulación: Registrar Pago')"><i class="ph ph-currency-circle-dollar"></i> Registrar Pago</button>
+                                <button class="action-btn" onclick="app.navTo('mass-messages')"><i class="ph ph-paper-plane-tilt"></i> Enviar Aviso</button>
+                                <button class="action-btn" onclick="alert('Simulación: Agendar Visita')"><i class="ph ph-calendar-plus"></i> Agendar Visita</button>
+                                <button class="action-btn" onclick="app.navTo('inventory')"><i class="ph ph-package"></i> Actualizar Stock Insumos</button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 3. PANEL DEL SOCIO -->
+                <section id="member-panel" class="view-section">
+                    <div class="section-header">
+                        <h2>Mi Membresía</h2>
+                    </div>
+
+                    <div class="member-welcome card gradient-card mb-4">
+                        <div class="avatar-large" style="background-image: url('https://i.pravatar.cc/150?img=11');"></div>
+                        <div class="member-welcome-info">
+                            <h3>Hola, Martín!</h3>
+                            <p>Socio #042 • Miembro desde 2022</p>
+                            <div class="status-badge status-active">Membresía Al Día</div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-cards split-2">
+                        <div class="card">
+                            <div class="card-header"><h3>Próxima Cuota</h3></div>
+                            <div class="card-body">
+                                <p class="text-large text-green text-bold">1 al 10 de Mayo</p>
+                                <p class="text-neutral">Tenés tiempo. ¡Gracias por tu compromiso!</p>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header"><h3>Accesos Rápidos</h3></div>
+                            <div class="card-body list-actions">
+                                <a href="#" onclick="app.navTo('community')">Ver la Comunidad <i class="ph ph-arrow-right"></i></a>
+                                <a href="#" onclick="alert('Simulación: Descargar reglamento')">Reglamento Interno <i class="ph ph-arrow-right"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 4. COMUNIDAD -->
+                <section id="community" class="view-section">
+                    <div class="section-header">
+                        <h2>Comunidad Privada</h2>
+                        <p class="section-subtitle">Lo que pasa en el club, queda en el club.</p>
+                    </div>
+
+                    <div class="feed-container">
+                        <!-- Post 1 -->
+                        <div class="feed-post card">
+                            <div class="post-header">
+                                <div class="post-user">
+                                    <div class="avatar" style="background-image: url('https://i.pravatar.cc/150?u=club');"></div>
+                                    <div>
+                                        <strong>Directiva del Club</strong>
+                                        <span>Hace 2 horas</span>
+                                    </div>
+                                </div>
+                                <button class="btn-icon"><i class="ph ph-dots-three"></i></button>
+                            </div>
+                            <div class="post-image" style="background-image: url('https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=800&auto=format&fit=crop&q=60');"></div>
+                            <div class="post-actions">
+                                <button class="btn-icon"><i class="ph ph-heart"></i></button>
+                                <button class="btn-icon"><i class="ph ph-chat-circle"></i></button>
+                            </div>
+                            <div class="post-content">
+                                <strong>Directiva del Club</strong> Acondicionando la sala de secado para la próxima semana. ¡Gran trabajo del equipo! 🌱
+                            </div>
+                            <div class="post-comments">
+                                <div class="comment"><strong>Socio #12</strong> ¡Qué buena pinta tiene eso!</div>
+                                <div class="add-comment">
+                                    <input type="text" placeholder="Agregar un comentario...">
+                                    <button class="text-primary">Publicar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 5. CHAT -->
+                <section id="chat" class="view-section">
+                    <div class="chat-layout card">
+                        <div class="chat-sidebar">
+                            <div class="chat-search">
+                                <i class="ph ph-magnifying-glass"></i>
+                                <input type="text" placeholder="Buscar chats...">
+                            </div>
+                            <div class="chat-list">
+                                <div class="chat-item active">
+                                    <div class="avatar" style="background-color: var(--primary-color); color: white;">RC</div>
+                                    <div class="chat-item-info">
+                                        <h4>Red de Clubes</h4>
+                                        <p>Nuevo protocolo IRCCA disponible...</p>
+                                    </div>
+                                </div>
+                                <div class="chat-item">
+                                    <div class="avatar" style="background-image: url('https://i.pravatar.cc/150?img=33');"></div>
+                                    <div class="chat-item-info">
+                                        <h4>Socio #23</h4>
+                                        <p>Genial, paso mañana. Saludos!</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="chat-main">
+                            <div class="chat-header">
+                                <h4>Red de Clubes (Global Administradores)</h4>
+                            </div>
+                            <div class="chat-messages">
+                                <div class="message received">
+                                    <div class="msg-author">Club del Sur</div>
+                                    <div class="msg-bubble">Buenas tardes. ¿Alguno tuvo problemas con la plataforma del ministerio hoy?</div>
+                                    <div class="msg-time">14:23</div>
+                                </div>
+                                <div class="message sent">
+                                    <div class="msg-bubble">Hola, por acá todo funcionando normal de momento.</div>
+                                    <div class="msg-time">14:30</div>
+                                </div>
+                            </div>
+                            <div class="chat-input-area">
+                                <button class="btn-icon"><i class="ph ph-paperclip"></i></button>
+                                <input type="text" placeholder="Escribí un mensaje...">
+                                <button class="btn-icon text-primary"><i class="ph ph-paper-plane-right"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 6. MENSAJES MASIVOS -->
+                <section id="mass-messages" class="view-section">
+                    <div class="section-header">
+                        <h2>Avisos Institucionales</h2>
+                        <p class="section-subtitle">Comunicate de forma masiva y unidireccional con tus socios.</p>
+                    </div>
+                    
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label>Destinatarios</label>
+                                <select>
+                                    <option>Todos los socios activos (42)</option>
+                                    <option>Socios con cuota pendiente (3)</option>
+                                    <option>Directiva (4)</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Mensaje</label>
+                                <textarea rows="4" placeholder="Escribí acá el aviso para los socios..."></textarea>
+                            </div>
+                            <button class="btn btn-primary" onclick="alert('Aviso enviado correctamente')"><i class="ph ph-paper-plane-tilt"></i> Enviar Aviso</button>
+                        </div>
+                    </div>
+
+                    <h3>Historial de Avisos</h3>
+                    <div class="list-container mt-2">
+                        <div class="list-item">
+                            <div class="list-icon"><i class="ph ph-megaphone"></i></div>
+                            <div class="list-content">
+                                <h4>Horario de asamblea ajustado</h4>
+                                <p>Enviado a Todos los socios • Hace 2 días</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 7. INVENTARIO -->
+                <section id="inventory" class="view-section">
+                    <div class="section-header flex-between">
+                        <h2>Inventario y Equipamiento</h2>
+                        <button class="btn btn-outline"><i class="ph ph-plus"></i> Nuevo Insumo</button>
+                    </div>
+                    <p class="section-subtitle">Gestión estricta de insumos agrícolas y herramientas internas.</p>
+                    
+                    <div class="card">
+                        <div class="tabs">
+                            <div class="tab active">Insumos (Sustratos, Fertilizantes)</div>
+                            <div class="tab">Herramientas</div>
+                            <div class="tab">Iluminación</div>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Categoría</th>
+                                        <th>Ítem</th>
+                                        <th>Cantidad</th>
+                                        <th>Estado</th>
+                                        <th>Próx. Compra</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Sustrato</td>
+                                        <td>Tierra Light Mix 50L</td>
+                                        <td><strong>12 bolsas</strong></td>
+                                        <td><span class="status-badge status-active">Óptimo</span></td>
+                                        <td>15/06/2026</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Fertilizante</td>
+                                        <td>Vege Plus 1L</td>
+                                        <td><strong>2 botellas</strong></td>
+                                        <td><span class="status-badge status-alert">Bajo</span></td>
+                                        <td>Urgente</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Herramientas</td>
+                                        <td>Tijera podadora profesional</td>
+                                        <td><strong>4 uds</strong></td>
+                                        <td><span class="status-badge status-active">Óptimo</span></td>
+                                        <td>-</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 8. PRÓXIMAMENTE -->
+                <section id="soon" class="view-section">
+                    <div class="section-header text-center">
+                        <i class="ph ph-sparkle text-primary" style="font-size: 3rem;"></i>
+                        <h2>En desarrollo</h2>
+                        <p class="section-subtitle">Estamos construyendo el futuro de la gestión de clubes en Uruguay.</p>
+                    </div>
+                    
+                    <div class="timeline mt-4">
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-content card">
+                                <h4>Q3 2026 - Trazabilidad Blockchain</h4>
+                                <p>Registro inmutable de asambleas y decisiones directivas.</p>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-dot outline"></div>
+                            <div class="timeline-content card">
+                                <h4>Q4 2026 - App Nativa iOS y Android</h4>
+                                <p>Toda la experiencia Prendé directo desde la App Store.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 9. ESTADÍSTICAS SOCIO -->
+                <section id="stats-user" class="view-section">
+                    <div class="section-header">
+                        <h2>Mi Resumen Anual</h2>
+                    </div>
+                    <div class="dashboard-cards">
+                        <div class="card stat-card text-center">
+                            <h3>100%</h3>
+                            <p class="text-neutral">Asistencia a Asambleas</p>
+                        </div>
+                        <div class="card stat-card text-center">
+                            <h3>Al día</h3>
+                            <p class="text-neutral">Aportes 2026</p>
+                        </div>
+                    </div>
+                    <div class="card mt-4 p-4 text-center">
+                        <div class="placeholder-chart">
+                            [Gráfico simulado de compromiso social]
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 10. ESTADÍSTICAS CLUB -->
+                <section id="stats-club" class="view-section">
+                    <div class="section-header flex-between">
+                        <h2>Métricas del Club</h2>
+                        <select class="select-clean"><option>Este mes</option><option>Este año</option></select>
+                    </div>
+                    
+                    <div class="dashboard-cards split-3">
+                        <div class="card">
+                            <h4 class="text-neutral">Socios Activos</h4>
+                            <p class="h1 mt-2">42</p>
+                            <span class="text-green text-sm flex-align"><i class="ph ph-trend-up"></i> +2 este mes</span>
+                        </div>
+                        <div class="card">
+                            <h4 class="text-neutral">Costo Operativo</h4>
+                            <p class="h1 mt-2">$28.4k</p>
+                            <span class="text-alert text-sm flex-align"><i class="ph ph-info"></i> Insumos y alquiler</span>
+                        </div>
+                        <div class="card bg-primary text-white">
+                            <h4 class="text-white opacity-80">Salud Financiera</h4>
+                            <p class="h1 mt-2">Excelente</p>
+                            <span class="text-white opacity-80 text-sm">Tesorería cubierta por 6 meses</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 11. NOTICIAS EN TIEMPO REAL -->
+                <section id="news" class="view-section">
+                    <div class="section-header">
+                        <h2>Actualidad y Marco Legal</h2>
+                        <p class="section-subtitle">Mantente al tanto de las regulaciones y noticias globales.</p>
+                    </div>
+                    <div class="news-grid mt-4">
+                        <div class="card news-card">
+                            <div class="news-img" style="background-image: url('https://images.unsplash.com/photo-1589829085413-56de8ae18c73?w=500&auto=format&fit=crop&q=60');"></div>
+                            <div class="news-content">
+                                <span class="tag">IRCCA</span>
+                                <h4>Actualización de protocolos para inspecciones 2026</h4>
+                                <p>Resumen de los nuevos requisitos documentales...</p>
+                                <a href="#" class="text-primary mt-2 d-inline-block">Leer más</a>
+                            </div>
+                        </div>
+                        <div class="card news-card">
+                            <div class="news-img" style="background-image: url('https://images.unsplash.com/photo-1526628953301-3e589a6a8b74?w=500&auto=format&fit=crop&q=60');"></div>
+                            <div class="news-content">
+                                <span class="tag">Global</span>
+                                <h4>Nuevas regulaciones en el mercado europeo</h4>
+                                <p>Impacto de las últimas decisiones legislativas internacionales.</p>
+                                <a href="#" class="text-primary mt-2 d-inline-block">Leer más</a>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 12. CONTENIDO -->
+                <section id="content" class="view-section">
+                    <div class="section-header">
+                        <h2>Educación y Cultura</h2>
+                        <p class="section-subtitle">Promovemos un ecosistema informado y responsable.</p>
+                    </div>
+                    <div class="content-slider mt-4">
+                        <div class="card content-card bg-warm">
+                            <div class="card-body">
+                                <h3>La guía del viaje sin pánico</h3>
+                                <p>Herramientas y acompañamiento para situaciones de vulnerabilidad.</p>
+                                <button class="btn btn-outline mt-3">Leer Artículo</button>
+                            </div>
+                        </div>
+                        <div class="card content-card bg-terra">
+                            <div class="card-body">
+                                <h3>Reducción de Daños</h3>
+                                <p>Prácticas fundamentales para un abordaje responsable e informado.</p>
+                                <button class="btn btn-outline mt-3">Leer Artículo</button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 13. MÚSICA -->
+                <section id="music" class="view-section">
+                    <div class="section-header">
+                        <h2>Living Room</h2>
+                        <p class="section-subtitle">Ambientá el club con nuestras playlists colaborativas.</p>
+                    </div>
+                    <div class="card player-card flex-row p-0">
+                        <div class="player-cover" style="background-image: url('https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=500&auto=format&fit=crop&q=60'); width: 200px; border-radius: var(--radius-md) 0 0 var(--radius-md);"></div>
+                        <div class="player-info p-4 flex-1">
+                            <div class="flex-between">
+                                <div>
+                                    <h3 class="mb-1">Sesiones de la Tarde</h3>
+                                    <p class="text-neutral">Prendé Official Playlist • Lo-fi & Jazz</p>
+                                </div>
+                                <i class="ph ph-spotify-logo text-primary" style="font-size: 2rem;"></i>
+                            </div>
+                            <div class="player-controls mt-4 flex-align gap-4">
+                                <button class="btn-icon"><i class="ph ph-skip-back-circle"></i></button>
+                                <button class="btn-icon text-primary" style="font-size: 3rem;"><i class="ph ph-play-circle"></i></button>
+                                <button class="btn-icon"><i class="ph ph-skip-forward-circle"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 14. SINDICATO -->
+                <section id="syndicate" class="view-section">
+                    <div class="section-header">
+                        <h2>Sindicato de Trabajadores del Cannabis</h2>
+                    </div>
+                    <div class="card gradient-card">
+                        <h3>Asesoramiento y Respaldo</h3>
+                        <p class="mt-2 text-large opacity-90">Brindamos el puente necesario para formalizar el trabajo en el sector, garantizando derechos y apoyo legal para los trabajadores de clubes.</p>
+                        <button class="btn btn-primary mt-4" style="background: white; color: var(--primary-color);">Contactar Asesor</button>
+                    </div>
+                </section>
+
+                <!-- 15. LEGAL -->
+                <section id="legal" class="view-section">
+                    <div class="section-header flex-between">
+                        <h2>Documentación Legal</h2>
+                        <button class="btn btn-outline"><i class="ph ph-upload-simple"></i> Subir Documento</button>
+                    </div>
+                    <div class="list-container mt-4">
+                        <div class="list-item">
+                            <div class="list-icon bg-terra-light"><i class="ph ph-file-pdf text-terra"></i></div>
+                            <div class="list-content">
+                                <h4>Estatuto del Club (2025).pdf</h4>
+                                <p>Subido el 10/01/2026 • 2.4 MB</p>
+                            </div>
+                            <button class="btn-icon"><i class="ph ph-download-simple"></i></button>
+                        </div>
+                        <div class="list-item">
+                            <div class="list-icon bg-terra-light"><i class="ph ph-file-pdf text-terra"></i></div>
+                            <div class="list-content">
+                                <h4>Acta_Asamblea_Extraordinaria_Marzo.pdf</h4>
+                                <p>Subido el 15/03/2026 • 1.1 MB</p>
+                            </div>
+                            <button class="btn-icon"><i class="ph ph-download-simple"></i></button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 16. TIENDA LEGAL -->
+                <section id="store" class="view-section">
+                    <div class="section-header flex-between">
+                        <div>
+                            <h2>Tienda de Accesorios</h2>
+                            <p class="section-subtitle">Exclusivo insumos permitidos (Papelería, Accesorios, Merchandising).</p>
+                        </div>
+                        <button class="btn-icon cart-btn"><i class="ph ph-shopping-cart"></i> <span class="badge">0</span></button>
+                    </div>
+                    
+                    <div class="store-grid mt-4">
+                        <!-- Producto 1 -->
+                        <div class="card product-card">
+                            <div class="product-img flex-center" style="background: #F5F2EB; height: 180px; border-radius: var(--radius-md) var(--radius-md) 0 0;">
+                                <i class="ph ph-fire text-neutral" style="font-size: 4rem;"></i>
+                            </div>
+                            <div class="card-body">
+                                <h4>Encendedor Clipper Prendé</h4>
+                                <p class="text-neutral text-sm">Merchandising Oficial</p>
+                                <div class="flex-between mt-3 flex-align">
+                                    <span class="text-bold text-large">$ 150</span>
+                                    <button class="btn btn-outline" onclick="alert('Agregado al carrito')">Comprar</button>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Producto 2 -->
+                        <div class="card product-card">
+                            <div class="product-img flex-center" style="background: #F5F2EB; height: 180px; border-radius: var(--radius-md) var(--radius-md) 0 0;">
+                                <i class="ph ph-scroll text-neutral" style="font-size: 4rem;"></i>
+                            </div>
+                            <div class="card-body">
+                                <h4>Hojillas OCB King Size</h4>
+                                <p class="text-neutral text-sm">Papel orgánico</p>
+                                <div class="flex-between mt-3 flex-align">
+                                    <span class="text-bold text-large">$ 120</span>
+                                    <button class="btn btn-outline" onclick="alert('Agregado al carrito')">Comprar</button>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Producto 3 -->
+                        <div class="card product-card">
+                            <div class="product-img flex-center" style="background: #F5F2EB; height: 180px; border-radius: var(--radius-md) var(--radius-md) 0 0;">
+                                <i class="ph ph-t-shirt text-neutral" style="font-size: 4rem;"></i>
+                            </div>
+                            <div class="card-body">
+                                <h4>T-Shirt Club (Talle L)</h4>
+                                <p class="text-neutral text-sm">Algodón premium</p>
+                                <div class="flex-between mt-3 flex-align">
+                                    <span class="text-bold text-large">$ 850</span>
+                                    <button class="btn btn-outline" onclick="alert('Agregado al carrito')">Comprar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 17. PLANES SAAS -->
+                <section id="pricing" class="view-section">
+                    <div class="section-header text-center">
+                        <h2>Planes pensados para cada club</h2>
+                        <p class="section-subtitle mt-2">Transparencia, seguridad y un entorno totalmente digital y privado.</p>
+                    </div>
+
+                    <div class="pricing-grid mt-5">
+                        <div class="card pricing-card">
+                            <h3 class="text-neutral">Básico</h3>
+                            <div class="price"><span>USD</span> 49 <span>/mes</span></div>
+                            <ul class="features-list">
+                                <li><i class="ph ph-check text-green"></i> Hasta 20 Socios</li>
+                                <li><i class="ph ph-check text-green"></i> Panel de Tesorería</li>
+                                <li><i class="ph ph-check text-green"></i> Avisos Unidireccionales</li>
+                                <li class="text-muted"><i class="ph ph-x"></i> Comunidad Privada</li>
+                            </ul>
+                            <button class="btn btn-outline btn-full mt-4">Iniciar Prueba de 7 Días</button>
+                        </div>
+                        
+                        <div class="card pricing-card featured-pricing gradient-card text-white">
+                            <div class="tag-popular">Más Elegido</div>
+                            <h3 class="text-white opacity-90">Pro</h3>
+                            <div class="price"><span>USD</span> 89 <span>/mes</span></div>
+                            <ul class="features-list">
+                                <li><i class="ph ph-check"></i> Hasta 45 Socios (Max Legal)</li>
+                                <li><i class="ph ph-check"></i> Inventario Avanzado</li>
+                                <li><i class="ph ph-check"></i> Comunidad Privada</li>
+                                <li><i class="ph ph-check"></i> Acceso a Red de Clubes</li>
+                            </ul>
+                            <button class="btn btn-primary btn-full mt-4" style="background: white; color: var(--primary-color);">Iniciar Prueba Gratis</button>
+                        </div>
+                        
+                        <div class="card pricing-card">
+                            <h3 class="text-neutral">Premium</h3>
+                            <div class="price"><span>USD</span> 149 <span>/mes</span></div>
+                            <ul class="features-list">
+                                <li><i class="ph ph-check text-green"></i> Todo lo del plan Pro</li>
+                                <li><i class="ph ph-check text-green"></i> Asesoría Legal Integrada</li>
+                                <li><i class="ph ph-check text-green"></i> Soporte 24/7 Prioritario</li>
+                                <li><i class="ph ph-check text-green"></i> Setup Personalizado</li>
+                            </ul>
+                            <button class="btn btn-outline btn-full mt-4">Contactar Ventas</button>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        </main>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>
