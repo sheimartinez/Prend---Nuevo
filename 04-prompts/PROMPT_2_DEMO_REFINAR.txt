@@ -1,0 +1,86 @@
+Tengo una demo web llamada “Prendé” ya creada con HTML, CSS y JavaScript.
+
+NO quiero que la rehagas desde cero.
+Quiero mejorarla y dejarla lista para vender.
+
+==================================================
+OBJETIVO
+==================================================
+
+Refinar la demo para que se vea como un producto SaaS profesional, moderno y vendible.
+
+==================================================
+MEJORAR VISUAL
+==================================================
+
+- diseño general más limpio y premium
+- mejores espaciados
+- jerarquía visual clara
+- cards más modernas
+- botones más atractivos
+- tipografía más consistente
+- sombras suaves
+- bordes redondeados
+
+==================================================
+MEJORAR EXPERIENCIA
+==================================================
+
+- navegación más clara
+- separar mejor:
+  - panel del club
+  - panel del socio
+- mejorar el feed tipo Instagram:
+  - publicaciones más atractivas
+  - mejor layout
+- mejorar chat visual
+- mejorar sección de mensajes masivos
+- mejorar inventario visual
+- mejorar sección Próximamente
+- mejorar estadísticas
+- mejorar sección noticias
+- mejorar contenido
+
+==================================================
+IMPORTANTE
+==================================================
+
+- NO romper funcionalidades actuales
+- NO eliminar secciones
+- mantener todo lo existente
+- mejorar sin rehacer
+
+==================================================
+LEGAL
+==================================================
+
+- no incluir venta de cannabis
+- no mostrar precios de cannabis
+- no incentivar consumo
+- mantener enfoque interno y privado
+
+==================================================
+DISEÑO
+==================================================
+
+Mantener paleta:
+- beige
+- blanco
+- verde suave
+- terracota
+
+Estilo:
+- cálido
+- moderno
+- app profesional
+
+==================================================
+ENTREGA
+==================================================
+
+- styles.css actualizado (principal foco)
+- pequeños ajustes en HTML si hace falta
+- JS solo si es necesario
+
+Sin explicaciones largas.
+Solo código listo para reemplazar.

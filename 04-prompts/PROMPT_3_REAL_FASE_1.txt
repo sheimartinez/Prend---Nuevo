@@ -1,0 +1,81 @@
+Ahora quiero convertir la demo existente de “Prendé” en una aplicación REAL, funcional y lista para producción.
+
+IMPORTANTE
+- No rediseñar
+- No rehacer UI
+- Mantener la demo actual como base
+- Convertirla en SaaS real
+
+STACK OBLIGATORIO
+- Next.js
+- React
+- Tailwind CSS
+- Supabase
+
+OBJETIVO
+Construir la versión real con:
+- autenticación real
+- base de datos persistente
+- roles
+- multi-club
+- sesiones persistentes
+- datos reales
+- lista para deploy
+
+FASE 1
+Generar SOLO:
+1. estructura del proyecto
+2. package.json
+3. configuración de Next.js y Tailwind
+4. conexión con Supabase
+5. variables de entorno
+6. schema SQL inicial
+7. autenticación base
+
+ROLES
+- admin / presidente del club
+- socio
+
+ARQUITECTURA MULTI-CLUB
+Todos los datos deben estar separados por clubId.
+
+TABLAS INICIALES
+- clubs
+- users
+- memberships
+- payments
+- posts
+- comments
+- likes
+- notifications
+- inventory_items
+- upcoming_items
+- user_stats
+- club_stats
+- legal_documents
+- assemblies
+- admin_chat_messages
+- club_private_messages
+- content_items
+- news_items
+- legal_store_products
+- subscriptions
+
+RESTRICCIONES LEGALES
+- no incluir ecommerce de cannabis
+- no incluir compra directa de cannabis
+- no mostrar precios públicos de cannabis
+- no incentivar consumo
+- la tienda es solo de accesorios legales
+- el sitio público vende el software, no cannabis
+- mantener enfoque de gestión interna privada del club
+
+ENTREGA
+- estructura completa del proyecto
+- archivos reales
+- SQL real
+- pasos claros de instalación
+
+No pseudocódigo.
+No explicaciones largas.
+Si es mucho, entregá primero estructura + SQL + auth.
