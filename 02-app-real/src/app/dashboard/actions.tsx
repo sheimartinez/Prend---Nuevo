@@ -45,3 +45,30 @@ export async function logout() {
   await supabase.auth.signOut()
   redirect('/login')
 }
+
+export async function createClub(formData: FormData) {
+  const supabase = await createClient()
+
+  const name = formData.get('name') as string
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
+  if (!user) {
+    redirect('/login')
+  }
+
+  const { error } = await supabase.from('clubs').insert({
+    name,
+    owner_id: user.id,
+  })
+
+  if (error) {
+    console.log(error)
+    redirect('/dashboard?error=true')
+  }
+
+  revalidatePath('/dashboard')
+  redirect('/dashboard')
+}
