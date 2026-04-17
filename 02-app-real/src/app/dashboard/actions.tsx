@@ -59,13 +59,39 @@ export async function createClub(formData: FormData) {
     redirect('/login')
   }
 
-  const { error } = await supabase.from('clubs').insert({
-    name,
-    owner_id: user.id,
-  })
+  const { count: existingClubsCount } = await supabase
+    .from('clubs')
+    .select('*', { count: 'exact', head: true })
+    .eq('owner_id', user.id)
 
-  if (error) {
-    console.log(error)
+  if ((existingClubsCount ?? 0) >= 1) {
+    redirect('/dashboard?limit=true')
+  }
+
+  const { data: club, error: clubError } = await supabase
+    .from('clubs')
+    .insert({
+      name,
+      owner_id: user.id,
+    })
+    .select()
+    .single()
+
+  if (clubError || !club) {
+    console.log(clubError)
+    redirect('/dashboard?error=true')
+  }
+
+  const { error: membershipError } = await supabase
+    .from('memberships')
+    .insert({
+      user_id: user.id,
+      club_id: club.id,
+      role: 'admin',
+    })
+
+  if (membershipError) {
+    console.log(membershipError)
     redirect('/dashboard?error=true')
   }
 
