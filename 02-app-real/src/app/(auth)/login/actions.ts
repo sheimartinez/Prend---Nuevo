@@ -7,15 +7,21 @@ import { createClient } from '@/lib/supabase/server'
 export async function login(formData: FormData) {
   const supabase = await createClient()
 
-  const data = {
-    email: formData.get('email') as string,
-    password: formData.get('password') as string,
+  const email = String(formData.get('email') ?? '').trim().toLowerCase()
+  const password = String(formData.get('password') ?? '').trim()
+
+  if (!email || !password) {
+    redirect('/login?error=missing_fields')
   }
 
-  const { error } = await supabase.auth.signInWithPassword(data)
+  const { error } = await supabase.auth.signInWithPassword({
+    email,
+    password,
+  })
 
   if (error) {
-    redirect('/login?error=true')
+    console.log('LOGIN ERROR:', error)
+    redirect('/login?error=invalid_credentials')
   }
 
   revalidatePath('/', 'layout')
@@ -25,18 +31,51 @@ export async function login(formData: FormData) {
 export async function signup(formData: FormData) {
   const supabase = await createClient()
 
-  const data = {
-    email: formData.get('email') as string,
-    password: formData.get('password') as string,
+  const email = String(formData.get('email') ?? '').trim().toLowerCase()
+  const password = String(formData.get('password') ?? '').trim()
+
+  if (!email || !password) {
+    redirect('/login?error=missing_fields')
   }
 
-  const { error } = await supabase.auth.signUp(data)
+  if (password.length < 6) {
+    redirect('/login?error=weak_password')
+  }
+
+  const { data, error } = await supabase.auth.signUp({
+    email,
+    password,
+  })
 
   if (error) {
-    redirect('/login?error=true')
+    console.log('SIGNUP ERROR:', error)
+    redirect('/login?error=signup_failed')
+  }
+
+  if (!data.user) {
+    redirect('/login?error=signup_failed')
+  }
+
+  const { error: profileError } = await supabase.from('profiles').upsert(
+    {
+      id: data.user.id,
+      email,
+    },
+    {
+      onConflict: 'id',
+    }
+  )
+
+  if (profileError) {
+    console.log('PROFILE UPSERT ERROR AFTER SIGNUP:', profileError)
   }
 
   revalidatePath('/', 'layout')
+
+  if (!data.session) {
+    redirect('/login?success=check_email')
+  }
+
   redirect('/dashboard')
 }
 

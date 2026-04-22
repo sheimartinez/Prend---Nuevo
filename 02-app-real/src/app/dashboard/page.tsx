@@ -1,6 +1,6 @@
 import Link from 'next/link'
+import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
-import { createClub } from './actions'
 
 export default async function DashboardPage() {
   const supabase = await createClient()
@@ -9,96 +9,91 @@ export default async function DashboardPage() {
     data: { user },
   } = await supabase.auth.getUser()
 
-  const { count: clubsCount } = await supabase
-    .from('clubs')
-    .select('*', { count: 'exact', head: true })
-    .eq('owner_id', user?.id)
+  if (!user) {
+    redirect('/login')
+  }
 
-  const { data: clubs } = await supabase
+  const { data: memberships, error: membershipsError } = await supabase
+    .from('memberships')
+    .select('id, club_id, role, status')
+    .eq('user_id', user.id)
+
+  console.log('DASHBOARD USER ID:', user.id)
+  console.log('DASHBOARD MEMBERSHIPS:', memberships)
+  console.log('DASHBOARD MEMBERSHIPS ERROR:', membershipsError)
+
+  if (membershipsError) {
+    return <div>Error al cargar tus clubes</div>
+  }
+
+  if (!memberships || memberships.length === 0) {
+    return (
+      <main className="min-h-screen bg-[#FBF9F6] p-8">
+        <div className="mx-auto max-w-4xl">
+          <h1 className="text-3xl font-bold text-[#1E293B]">Dashboard</h1>
+          <p className="mt-4 text-gray-600">Todavía no perteneces a ningún club.</p>
+
+          <div className="mt-6">
+            <Link
+              href="/"
+              className="rounded-lg bg-[#76A889] px-4 py-2 text-white"
+            >
+              Volver al inicio
+            </Link>
+          </div>
+        </div>
+      </main>
+    )
+  }
+
+  const clubIds = memberships.map((membership) => membership.club_id)
+
+  const { data: clubs, error: clubsError } = await supabase
     .from('clubs')
-    .select('*')
-    .eq('owner_id', user?.id)
+    .select('id, name, created_at')
+    .in('id', clubIds)
+
+  console.log('DASHBOARD CLUBS:', clubs)
+  console.log('DASHBOARD CLUBS ERROR:', clubsError)
+
+  if (clubsError) {
+    return <div>Error al cargar los datos de los clubes</div>
+  }
 
   return (
     <main className="min-h-screen bg-[#FBF9F6] p-8">
       <div className="mx-auto max-w-6xl">
-        <h1 className="text-3xl font-bold text-[#1E293B]">Dashboard de Prendé</h1>
-        <p className="mt-2 text-[#475569]">
-          Ya estás dentro de la app real. Este panel ya está conectado a Supabase.
-        </p>
+        <h1 className="text-3xl font-bold text-[#1E293B]">Mis clubes</h1>
 
-        <div className="mt-8 grid gap-6 md:grid-cols-3">
-          <div className="rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm">
-            <h2 className="text-lg font-semibold text-[#1E293B]">Clubes registrados</h2>
-            <p className="mt-2 text-3xl font-bold text-[#76A889]">
-              {clubsCount ?? 0}
-            </p>
-          </div>
+        <div className="mt-8 grid gap-4">
+          {clubs?.map((club) => {
+            const membership = memberships.find((m) => m.club_id === club.id)
 
-          <div className="rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm">
-            <h2 className="text-lg font-semibold text-[#1E293B]">Estado</h2>
-            <p className="mt-2 text-lg font-medium text-[#475569]">
-              Conexión con Supabase activa
-            </p>
-          </div>
+            return (
+              <div key={club.id} className="rounded-2xl border bg-white p-6 shadow-sm">
+                <h2 className="text-xl font-semibold text-[#1E293B]">
+                  {club.name}
+                </h2>
 
-          <div className="rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm">
-            <h2 className="text-lg font-semibold text-[#1E293B]">Siguiente paso</h2>
-            <p className="mt-2 text-lg font-medium text-[#475569]">
-              Empezar a cargar datos reales
-            </p>
-          </div>
-        </div>
+                <p className="mt-2 text-sm text-gray-500">
+                  Rol: {membership?.role}
+                </p>
 
-        <div className="mt-8 rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm">
-          <h2 className="mb-4 text-xl font-semibold text-[#1E293B]">
-            Crear un club
-          </h2>
+                <p className="mt-1 text-sm text-gray-500">
+                  Estado: {membership?.status}
+                </p>
 
-          <form className="flex flex-col gap-3 sm:flex-row sm:items-center">
-            <input
-              name="name"
-              placeholder="Nombre del club"
-              required
-              className="w-full rounded-lg border border-neutral-300 px-4 py-3 text-[#1E293B] outline-none focus:border-[#76A889]"
-            />
-
-            <button
-              formAction={createClub}
-              className="rounded-lg bg-[#76A889] px-4 py-3 font-semibold text-white hover:bg-[#639276]"
-            >
-              Crear Club
-            </button>
-          </form>
-        </div>
-
-        <div className="mt-8">
-          <h2 className="mb-4 text-xl font-semibold text-[#1E293B]">
-            Mis Clubs
-          </h2>
-
-          <div className="space-y-3">
-            {clubs?.map((club) => (
-              <div
-                key={club.id}
-                className="rounded-xl border border-neutral-200 bg-white p-4 shadow-sm"
-              >
-                <div className="flex items-center justify-between gap-4">
-  <div>
-    <p className="font-semibold text-[#1E293B]">{club.name}</p>
-    <p className="mt-1 text-sm text-[#64748B]">ID: {club.id}</p>
-  </div>
-
-  <Link
-  href={`/club/${club.id}`}
-  className="rounded-lg bg-[#76A889] px-4 py-2 text-sm font-semibold text-white hover:bg-[#639276]"
->
-  Entrar al club
-</Link>
-</div>
+                <div className="mt-4">
+                  <Link
+                    href={`/club/${club.id}`}
+                    className="rounded-lg bg-[#76A889] px-4 py-2 text-white"
+                  >
+                    Entrar al club
+                  </Link>
+                </div>
               </div>
-            ))}
-          </div>
+            )
+          })}
         </div>
       </div>
     </main>

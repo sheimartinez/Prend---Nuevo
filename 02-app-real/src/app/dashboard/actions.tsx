@@ -19,7 +19,7 @@ export async function login(formData: FormData) {
   }
 
   revalidatePath('/', 'layout')
-  redirect('/dashboard') // Or main route, based on future development
+  redirect('/dashboard')
 }
 
 export async function signup(formData: FormData) {
@@ -49,7 +49,8 @@ export async function logout() {
 export async function createClub(formData: FormData) {
   const supabase = await createClient()
 
-  const name = formData.get('name') as string
+  const rawName = formData.get('name') as string
+  const name = rawName?.trim()
 
   const {
     data: { user },
@@ -57,6 +58,10 @@ export async function createClub(formData: FormData) {
 
   if (!user) {
     redirect('/login')
+  }
+
+  if (!name) {
+    redirect('/dashboard?error=missing_name')
   }
 
   const { count: existingClubsCount } = await supabase
@@ -79,7 +84,7 @@ export async function createClub(formData: FormData) {
 
   if (clubError || !club) {
     console.log(clubError)
-    redirect('/dashboard?error=true')
+    redirect('/dashboard?error=create_club')
   }
 
   const { error: membershipError } = await supabase
@@ -92,9 +97,10 @@ export async function createClub(formData: FormData) {
 
   if (membershipError) {
     console.log(membershipError)
-    redirect('/dashboard?error=true')
+    redirect('/dashboard?error=create_membership')
   }
 
   revalidatePath('/dashboard')
+  revalidatePath(`/club/${club.id}`)
   redirect('/dashboard')
 }
