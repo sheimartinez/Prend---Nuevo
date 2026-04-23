@@ -9,21 +9,20 @@ export async function POST(
   const supabase = await createClient()
 
   const formData = await req.formData()
-  const email = (formData.get('email') as string)?.trim().toLowerCase()
-  const role = formData.get('role') as string
-
-  console.log('--- ADD MEMBER START ---')
-  console.log('CLUB ID:', id)
-  console.log('EMAIL INGRESADO:', email)
-  console.log('ROLE INGRESADO:', role)
+  const email = String(formData.get('email') ?? '').trim().toLowerCase()
+  const role = String(formData.get('role') ?? 'member').trim()
 
   const {
     data: { user },
     error: userError,
   } = await supabase.auth.getUser()
 
-  console.log('AUTH USER:', user)
-  console.log('AUTH USER ERROR:', userError)
+  if (userError) {
+    const msg = encodeURIComponent(userError.message)
+    return NextResponse.redirect(
+      new URL(`/club/${id}?error=auth_user_failed&message=${msg}`, req.url)
+    )
+  }
 
   if (!user) {
     return NextResponse.redirect(new URL('/login', req.url))
@@ -34,10 +33,14 @@ export async function POST(
     .select('*')
     .eq('club_id', id)
     .eq('user_id', user.id)
-    .single()
+    .maybeSingle()
 
-  console.log('ADMIN MEMBERSHIP:', membership)
-  console.log('ADMIN MEMBERSHIP ERROR:', membershipError)
+  if (membershipError) {
+    const msg = encodeURIComponent(membershipError.message)
+    return NextResponse.redirect(
+      new URL(`/club/${id}?error=membership_lookup_failed&message=${msg}`, req.url)
+    )
+  }
 
   if (!membership || membership.role !== 'admin') {
     return NextResponse.redirect(new URL(`/club/${id}?error=not_admin`, req.url))
@@ -49,15 +52,10 @@ export async function POST(
     .eq('email', email)
     .maybeSingle()
 
-  console.log('PROFILE BUSCADO POR EMAIL:', email)
-  console.log('FOUND PROFILE:', foundProfile)
-  console.log('FOUND PROFILE ERROR:', foundProfileError)
-
   if (foundProfileError) {
-    console.log('ERROR AL BUSCAR PROFILE:', foundProfileError)
-
+    const msg = encodeURIComponent(foundProfileError.message)
     return NextResponse.redirect(
-      new URL(`/club/${id}?error=profile_lookup_failed`, req.url)
+      new URL(`/club/${id}?error=profile_lookup_failed&message=${msg}`, req.url)
     )
   }
 
@@ -75,8 +73,15 @@ export async function POST(
       .eq('user_id', foundProfile.id)
       .maybeSingle()
 
-  console.log('EXISTING MEMBERSHIP:', existingMembership)
-  console.log('EXISTING MEMBERSHIP ERROR:', existingMembershipError)
+  if (existingMembershipError) {
+    const msg = encodeURIComponent(existingMembershipError.message)
+    return NextResponse.redirect(
+      new URL(
+        `/club/${id}?error=existing_membership_lookup_failed&message=${msg}`,
+        req.url
+      )
+    )
+  }
 
   if (existingMembership) {
     return NextResponse.redirect(
@@ -91,11 +96,14 @@ export async function POST(
     status: 'active',
   })
 
-  console.log('INSERT MEMBERSHIP ERROR:', insertError)
-
   if (insertError) {
+    const msg = encodeURIComponent(insertError.message)
+    const code = encodeURIComponent(insertError.code ?? 'unknown')
     return NextResponse.redirect(
-      new URL(`/club/${id}?error=create_membership`, req.url)
+      new URL(
+        `/club/${id}?error=create_membership&code=${code}&message=${msg}`,
+        req.url
+      )
     )
   }
 
