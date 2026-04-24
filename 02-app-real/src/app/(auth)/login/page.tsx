@@ -1,65 +1,73 @@
-import { login, signup } from './actions'
+import Link from 'next/link'
+import { createClient } from '@/lib/supabase/server'
 
-export default function LoginPage() {
+export default async function HomePage() {
+  const supabase = await createClient()
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
   return (
-    <div className="flex bg-[#FBF9F6] min-h-screen flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <div className="w-full max-w-md space-y-8 bg-white p-10 rounded-2xl shadow-sm border border-neutral-100">
-        <div>
-          <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-[#1E293B]">
-            Ingresar a Prendé
-          </h2>
-          <p className="mt-2 text-center text-sm text-[#475569]">
-            Plataforma de gestión para Clubes
+    <main className="min-h-screen bg-[#FBF9F6]">
+      <section className="mx-auto flex min-h-screen max-w-6xl flex-col justify-center px-8 py-16">
+        <div className="max-w-3xl">
+          <p className="mb-4 inline-flex rounded-full border bg-white px-4 py-2 text-sm text-gray-600">
+            Gestión privada para clubes
           </p>
+
+          <h1 className="text-5xl font-bold tracking-tight text-[#1E293B] sm:text-6xl">
+            Prendé
+          </h1>
+
+          <p className="mt-6 max-w-2xl text-lg leading-8 text-gray-600">
+            Plataforma interna para organizar socios, accesos e invitaciones de forma privada.
+          </p>
+
+          <p className="mt-4 max-w-2xl text-sm leading-6 text-gray-500">
+            No es e-commerce, no permite venta pública y no promueve consumo. Está pensada como herramienta administrativa privada para clubes registrados.
+          </p>
+
+          <div className="mt-8 flex flex-wrap gap-3">
+            <Link
+              href={user ? '/dashboard' : '/login'}
+              className="rounded-lg bg-[#76A889] px-5 py-3 text-sm font-semibold text-white"
+            >
+              {user ? 'Ir al dashboard' : 'Ingresar'}
+            </Link>
+
+            <a
+              href="#seguridad"
+              className="rounded-lg border bg-white px-5 py-3 text-sm font-semibold text-[#1E293B]"
+            >
+              Ver enfoque
+            </a>
+          </div>
         </div>
-        <form className="mt-8 space-y-6">
-          <div className="space-y-4 rounded-md shadow-sm">
-            <div>
-              <label htmlFor="email" className="sr-only">
-                Correo Electrónico
-              </label>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                autoComplete="email"
-                required
-                className="relative block w-full rounded-lg border-0 py-3 px-4 text-[#1E293B] ring-1 ring-inset ring-neutral-300 placeholder:text-[#94A3B8] focus:z-10 focus:ring-2 focus:ring-inset focus:ring-[#76A889] sm:text-sm sm:leading-6"
-                placeholder="Correo Electrónico"
-              />
-            </div>
-            <div>
-              <label htmlFor="password" className="sr-only">
-                Contraseña
-              </label>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                autoComplete="current-password"
-                required
-                className="relative block w-full rounded-lg border-0 py-3 px-4 text-[#1E293B] ring-1 ring-inset ring-neutral-300 placeholder:text-[#94A3B8] focus:z-10 focus:ring-2 focus:ring-inset focus:ring-[#76A889] sm:text-sm sm:leading-6"
-                placeholder="Contraseña"
-              />
-            </div>
+
+        <div id="seguridad" className="mt-20 grid gap-4 sm:grid-cols-3">
+          <div className="rounded-2xl border bg-white p-6">
+            <h2 className="font-semibold text-[#1E293B]">Acceso privado</h2>
+            <p className="mt-2 text-sm text-gray-500">
+              Solo usuarios autenticados y miembros del club pueden acceder al panel interno.
+            </p>
           </div>
 
-          <div className="flex flex-col gap-3">
-            <button
-              formAction={login}
-              className="flex w-full justify-center rounded-lg bg-[#76A889] px-3 py-3 text-sm font-semibold text-white hover:bg-[#639276] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#76A889] transition-colors"
-            >
-              Iniciar Sesión
-            </button>
-            <button
-              formAction={signup}
-              className="flex w-full justify-center rounded-lg border border-[#76A889] bg-transparent px-3 py-3 text-sm font-semibold text-[#76A889] hover:bg-green-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#76A889] transition-colors"
-            >
-              Crear Cuenta
-            </button>
+          <div className="rounded-2xl border bg-white p-6">
+            <h2 className="font-semibold text-[#1E293B]">Gestión de socios</h2>
+            <p className="mt-2 text-sm text-gray-500">
+              Administra miembros, roles e invitaciones desde un espacio cerrado.
+            </p>
           </div>
-        </form>
-      </div>
-    </div>
+
+          <div className="rounded-2xl border bg-white p-6">
+            <h2 className="font-semibold text-[#1E293B]">Sin venta pública</h2>
+            <p className="mt-2 text-sm text-gray-500">
+              La plataforma no incluye marketplace, tienda ni promoción pública de productos.
+            </p>
+          </div>
+        </div>
+      </section>
+    </main>
   )
 }

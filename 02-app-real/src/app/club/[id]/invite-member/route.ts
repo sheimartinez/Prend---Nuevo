@@ -12,15 +12,9 @@ export async function POST(
   const email = String(formData.get('email') ?? '').trim().toLowerCase()
   const role = String(formData.get('role') ?? 'socio').trim()
 
-  if (!email) {
+  if (!email || !['socio', 'admin'].includes(role)) {
     return NextResponse.redirect(
-      new URL(`/club/${id}?error=user_not_found`, req.url)
-    )
-  }
-
-  if (!['socio', 'admin'].includes(role)) {
-    return NextResponse.redirect(
-      new URL(`/club/${id}?error=invalid_role`, req.url)
+      new URL(`/club/${id}?error=invalid_invitation`, req.url)
     )
   }
 
@@ -43,46 +37,57 @@ export async function POST(
     return NextResponse.redirect(new URL(`/club/${id}?error=not_admin`, req.url))
   }
 
-  const { data: foundProfile } = await supabase
+  const { data: profile } = await supabase
     .from('profiles')
-    .select('id, email')
+    .select('id')
     .eq('email', email)
     .maybeSingle()
 
-  if (!foundProfile) {
-    return NextResponse.redirect(
-      new URL(`/club/${id}?error=user_not_found`, req.url)
-    )
+  if (profile) {
+    const { data: existingMembership } = await supabase
+      .from('memberships')
+      .select('id')
+      .eq('club_id', id)
+      .eq('user_id', profile.id)
+      .maybeSingle()
+
+    if (existingMembership) {
+      return NextResponse.redirect(
+        new URL(`/club/${id}?error=already_member`, req.url)
+      )
+    }
   }
 
-  const { data: existingMembership } = await supabase
-    .from('memberships')
+  const { data: existingInvitation } = await supabase
+    .from('invitations')
     .select('id')
     .eq('club_id', id)
-    .eq('user_id', foundProfile.id)
+    .eq('email', email)
+    .eq('status', 'pending')
     .maybeSingle()
 
-  if (existingMembership) {
+  if (existingInvitation) {
     return NextResponse.redirect(
-      new URL(`/club/${id}?error=already_member`, req.url)
+      new URL(`/club/${id}?error=invitation_already_pending`, req.url)
     )
   }
 
-  const { error: insertError } = await supabase.from('memberships').insert({
-    user_id: foundProfile.id,
+  const { error: inviteError } = await supabase.from('invitations').insert({
     club_id: id,
+    email,
     role,
-    status: 'active',
+    invited_by: user.id,
+    status: 'pending',
   })
 
-  if (insertError) {
-    const message = encodeURIComponent(insertError.message)
+  if (inviteError) {
+    const message = encodeURIComponent(inviteError.message)
     return NextResponse.redirect(
-      new URL(`/club/${id}?error=create_membership&message=${message}`, req.url)
+      new URL(`/club/${id}?error=create_invitation_failed&message=${message}`, req.url)
     )
   }
 
   return NextResponse.redirect(
-    new URL(`/club/${id}?success=member_created`, req.url)
+    new URL(`/club/${id}?success=invitation_created`, req.url)
   )
 }

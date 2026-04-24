@@ -4,53 +4,14 @@ import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 
-export async function login(formData: FormData) {
-  const supabase = await createClient()
-
-  const data = {
-    email: formData.get('email') as string,
-    password: formData.get('password') as string,
-  }
-
-  const { error } = await supabase.auth.signInWithPassword(data)
-
-  if (error) {
-    redirect('/login?error=true')
-  }
-
-  revalidatePath('/', 'layout')
-  redirect('/dashboard')
-}
-
-export async function signup(formData: FormData) {
-  const supabase = await createClient()
-
-  const data = {
-    email: formData.get('email') as string,
-    password: formData.get('password') as string,
-  }
-
-  const { error } = await supabase.auth.signUp(data)
-
-  if (error) {
-    redirect('/login?error=true')
-  }
-
-  revalidatePath('/', 'layout')
-  redirect('/dashboard')
-}
-
-export async function logout() {
-  const supabase = await createClient()
-  await supabase.auth.signOut()
-  redirect('/login')
-}
-
 export async function createClub(formData: FormData) {
   const supabase = await createClient()
 
-  const rawName = formData.get('name') as string
-  const name = rawName?.trim()
+  const name = String(formData.get('name') ?? '').trim()
+
+  if (!name) {
+    redirect('/dashboard?error=missing_club_name')
+  }
 
   const {
     data: { user },
@@ -60,47 +21,43 @@ export async function createClub(formData: FormData) {
     redirect('/login')
   }
 
-  if (!name) {
-    redirect('/dashboard?error=missing_name')
+  const { data: existingMemberships, error: existingMembershipsError } =
+    await supabase
+      .from('memberships')
+      .select('id, club_id, role')
+      .eq('user_id', user.id)
+
+  if (existingMembershipsError) {
+    redirect('/dashboard?error=club_check_failed')
   }
 
-  const { count: existingClubsCount } = await supabase
-    .from('clubs')
-    .select('*', { count: 'exact', head: true })
-    .eq('owner_id', user.id)
-
-  if ((existingClubsCount ?? 0) >= 1) {
-    redirect('/dashboard?limit=true')
+  if (existingMemberships && existingMemberships.length > 0) {
+    redirect('/dashboard?error=club_limit_reached')
   }
 
   const { data: club, error: clubError } = await supabase
     .from('clubs')
     .insert({
       name,
-      owner_id: user.id,
     })
-    .select()
+    .select('id')
     .single()
 
   if (clubError || !club) {
-    console.log(clubError)
-    redirect('/dashboard?error=create_club')
+    redirect('/dashboard?error=create_club_failed')
   }
 
-  const { error: membershipError } = await supabase
-    .from('memberships')
-    .insert({
-      user_id: user.id,
-      club_id: club.id,
-      role: 'admin',
-    })
+  const { error: membershipError } = await supabase.from('memberships').insert({
+    club_id: club.id,
+    user_id: user.id,
+    role: 'admin',
+    status: 'active',
+  })
 
   if (membershipError) {
-    console.log(membershipError)
-    redirect('/dashboard?error=create_membership')
+    redirect('/dashboard?error=create_admin_membership_failed')
   }
 
   revalidatePath('/dashboard')
-  revalidatePath(`/club/${club.id}`)
-  redirect('/dashboard')
+  redirect(`/club/${club.id}?success=club_created`)
 }

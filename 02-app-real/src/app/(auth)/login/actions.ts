@@ -20,7 +20,6 @@ export async function login(formData: FormData) {
   })
 
   if (error) {
-    console.log('LOGIN ERROR:', error)
     redirect('/login?error=invalid_credentials')
   }
 
@@ -48,7 +47,10 @@ export async function signup(formData: FormData) {
   })
 
   if (error) {
-    console.log('SIGNUP ERROR:', error)
+    if (error.code === 'user_already_exists') {
+      redirect('/login?error=user_already_exists')
+    }
+
     redirect('/login?error=signup_failed')
   }
 
@@ -67,7 +69,7 @@ export async function signup(formData: FormData) {
   )
 
   if (profileError) {
-    console.log('PROFILE UPSERT ERROR AFTER SIGNUP:', profileError)
+    redirect('/login?error=profile_create_failed')
   }
 
   revalidatePath('/', 'layout')
@@ -77,6 +79,26 @@ export async function signup(formData: FormData) {
   }
 
   redirect('/dashboard')
+}
+
+export async function sendPasswordReset(formData: FormData) {
+  const supabase = await createClient()
+
+  const email = String(formData.get('email') ?? '').trim().toLowerCase()
+
+  if (!email) {
+    redirect('/login?error=missing_email')
+  }
+
+  const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/reset-password`,
+  })
+
+  if (error) {
+    redirect('/login?error=password_reset_failed')
+  }
+
+  redirect('/login?success=password_reset_sent')
 }
 
 export async function logout() {
