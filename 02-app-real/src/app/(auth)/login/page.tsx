@@ -1,73 +1,86 @@
-import Link from 'next/link'
-import { createClient } from '@/lib/supabase/server'
+"use client";
 
-export default async function HomePage() {
-  const supabase = await createClient()
+import { useState } from "react";
+import { createClient } from "@/lib/supabase/client";
+import { useRouter } from "next/navigation";
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
+export default function LoginPage() {
+  const supabase = createClient();
+  const router = useRouter();
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleLogin = async (e: any) => {
+    e.preventDefault();
+    setLoading(true);
+
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (error) {
+      alert(error.message);
+      setLoading(false);
+      return;
+    }
+
+    router.push("/dashboard");
+  };
 
   return (
-    <main className="min-h-screen bg-[#FBF9F6]">
-      <section className="mx-auto flex min-h-screen max-w-6xl flex-col justify-center px-8 py-16">
-        <div className="max-w-3xl">
-          <p className="mb-4 inline-flex rounded-full border bg-white px-4 py-2 text-sm text-gray-600">
-            Gestión privada para clubes
-          </p>
+    <div className="min-h-screen flex items-center justify-center bg-[#FBF9F6] px-6">
+      <div className="w-full max-w-md bg-white border rounded-xl p-6">
+        <h1 className="text-2xl font-bold text-[#1E293B]">
+          Ingresar a Prendé
+        </h1>
 
-          <h1 className="text-5xl font-bold tracking-tight text-[#1E293B] sm:text-6xl">
-            Prendé
-          </h1>
+        <p className="text-sm text-gray-600 mt-2">
+          Acceso privado para clubes y socios.
+        </p>
 
-          <p className="mt-6 max-w-2xl text-lg leading-8 text-gray-600">
-            Plataforma interna para organizar socios, accesos e invitaciones de forma privada.
-          </p>
-
-          <p className="mt-4 max-w-2xl text-sm leading-6 text-gray-500">
-            No es e-commerce, no permite venta pública y no promueve consumo. Está pensada como herramienta administrativa privada para clubes registrados.
-          </p>
-
-          <div className="mt-8 flex flex-wrap gap-3">
-            <Link
-              href={user ? '/dashboard' : '/login'}
-              className="rounded-lg bg-[#76A889] px-5 py-3 text-sm font-semibold text-white"
-            >
-              {user ? 'Ir al dashboard' : 'Ingresar'}
-            </Link>
-
-            <a
-              href="#seguridad"
-              className="rounded-lg border bg-white px-5 py-3 text-sm font-semibold text-[#1E293B]"
-            >
-              Ver enfoque
-            </a>
-          </div>
-        </div>
-
-        <div id="seguridad" className="mt-20 grid gap-4 sm:grid-cols-3">
-          <div className="rounded-2xl border bg-white p-6">
-            <h2 className="font-semibold text-[#1E293B]">Acceso privado</h2>
-            <p className="mt-2 text-sm text-gray-500">
-              Solo usuarios autenticados y miembros del club pueden acceder al panel interno.
-            </p>
+        <form onSubmit={handleLogin} className="space-y-4 mt-6">
+          <div>
+            <label className="block text-sm font-medium">Email</label>
+            <input
+              type="email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full border rounded p-2"
+              placeholder="tu@email.com"
+            />
           </div>
 
-          <div className="rounded-2xl border bg-white p-6">
-            <h2 className="font-semibold text-[#1E293B]">Gestión de socios</h2>
-            <p className="mt-2 text-sm text-gray-500">
-              Administra miembros, roles e invitaciones desde un espacio cerrado.
-            </p>
+          <div>
+            <label className="block text-sm font-medium">Contraseña</label>
+            <input
+              type="password"
+              required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full border rounded p-2"
+              placeholder="********"
+            />
           </div>
 
-          <div className="rounded-2xl border bg-white p-6">
-            <h2 className="font-semibold text-[#1E293B]">Sin venta pública</h2>
-            <p className="mt-2 text-sm text-gray-500">
-              La plataforma no incluye marketplace, tienda ni promoción pública de productos.
-            </p>
-          </div>
-        </div>
-      </section>
-    </main>
-  )
+          <button
+            disabled={loading}
+            className="w-full bg-[#76A889] text-white rounded p-2"
+          >
+            {loading ? "Ingresando..." : "Ingresar"}
+          </button>
+        </form>
+
+        <a
+          href="/signup"
+          className="block text-sm text-[#76A889] mt-4 text-center"
+        >
+          Crear cuenta
+        </a>
+      </div>
+    </div>
+  );
 }
