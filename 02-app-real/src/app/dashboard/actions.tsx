@@ -36,23 +36,25 @@ export async function createClub(formData: FormData) {
   }
 
   const { data: club, error: clubError } = await supabase
-    .from('clubs')
-    .insert({
-      name,
-    })
-    .select('id')
-    .single()
+  .from('clubs')
+  .insert({
+    name,
+    owner_id: user.id,
+    created_by: user.id,
+  })
+  .select('id')
+  .single()
 
   if (clubError || !club) {
-    redirect('/dashboard?error=create_club_failed')
-  }
+  console.error("CREATE CLUB ERROR:", clubError)
+  redirect('/dashboard?error=create_club_failed')
+}
 
   const { error: membershipError } = await supabase.from('memberships').insert({
-    club_id: club.id,
-    user_id: user.id,
-    role: 'admin',
-    status: 'active',
-  })
+  club_id: club.id,
+  user_id: user.id,
+  role: 'admin',
+})
 
   if (membershipError) {
     redirect('/dashboard?error=create_admin_membership_failed')
