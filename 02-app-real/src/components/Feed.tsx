@@ -17,10 +17,7 @@ export default async function Feed({ clubId }: { clubId: string }) {
           <p>{post.content}</p>
 
           {post.image_url && (
-            <img
-              src={post.image_url}
-              className="mt-2 rounded-lg"
-            />
+            <img src={post.image_url} className="mt-2 rounded-lg" />
           )}
 
           <div className="flex gap-4 mt-2 text-sm text-gray-400">

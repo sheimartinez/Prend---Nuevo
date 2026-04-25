@@ -23,7 +23,7 @@ export default async function SocioDashboard() {
           >
             <h2 className="text-lg">{m.clubs?.name}</h2>
             <p className="text-sm text-gray-400">
-              Estado: {m.role}
+              Rol: {m.role}
             </p>
           </Link>
         ))}
