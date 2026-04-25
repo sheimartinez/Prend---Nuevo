@@ -1,27 +1,20 @@
-import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
-import { cookies } from "next/headers";
 import SocioNav from "@/components/SocioNav";
+import { createClient } from "@/lib/supabase/server";
 
-export default async function Perfil() {
-  const supabase = createServerComponentClient({ cookies });
+export default async function PerfilSocioPage() {
+  const supabase = await createClient();
 
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("*")
-    .eq("id", user?.id)
-    .single();
-
   return (
     <div className="p-4 pb-20">
-      <h1 className="text-2xl font-bold mb-4">Perfil</h1>
+      <h1 className="text-2xl font-bold mb-4">Mi perfil</h1>
 
-      <div className="bg-zinc-900 p-4 rounded-xl">
-        <p><strong>Email:</strong> {user?.email}</p>
-        <p><strong>Nombre:</strong> {profile?.full_name}</p>
+      <div className="border rounded-xl p-4">
+        <p className="text-sm text-gray-600">Email</p>
+        <p className="font-medium">{user?.email || "Sin sesión"}</p>
       </div>
 
       <SocioNav />

@@ -178,11 +178,12 @@ export default async function DashboardPage({
                         </p>
                       </div>
 
-                      <form action={`/invitations/${invitation.id}/accept`} method="post">
-                        <button className="rounded-lg bg-[#76A889] px-4 py-2 text-sm text-white">
-                          Aceptar invitación
-                        </button>
-                      </form>
+                      <Link
+  href={`/invitations/${invitation.id}/accept`}
+  className="rounded-lg bg-[#76A889] px-4 py-2 text-sm text-white"
+>
+  Aceptar invitación
+</Link>
                     </div>
                   )
                 })}
