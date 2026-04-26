@@ -2,22 +2,11 @@
 
 import { use, useEffect, useState } from "react";
 import Link from "next/link";
-import {
-  Users,
-  BookOpen,
-  CreditCard,
-  MessageCircle,
-  Archive,
-  ArrowRight,
-} from "lucide-react";
+import { Users, BookOpen, CreditCard, MessageCircle, Archive, ArrowRight } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import SocioShell from "@/components/socio/SocioShell";
 
-export default function ClubSocioPage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
+export default function ClubSocioPage({ params }: { params: Promise<{ id: string }> }) {
   const { id: clubId } = use(params);
   const supabase = createClient();
 
@@ -63,93 +52,130 @@ export default function ClubSocioPage({
     );
   }
 
+  const cards = [
+    {
+      title: "Comunidad",
+      text: "Publicaciones internas, comentarios y participación privada.",
+      href: `/socio/club/${clubId}/comunidad`,
+      icon: Users,
+      primary: true,
+    },
+    {
+      title: "Biblioteca",
+      text: "Guías, documentos, contenido educativo y cultura interna.",
+      href: `/socio/club/${clubId}/biblioteca`,
+      icon: BookOpen,
+    },
+    {
+      title: "Cuota social",
+      text: "Estado de cuota, vencimiento e historial de pagos.",
+      href: `/socio/club/${clubId}/cuota`,
+      icon: CreditCard,
+    },
+    {
+      title: "Mensajes",
+      text: "Comunicación privada entre el socio y el club.",
+      href: `/socio/club/${clubId}/mensajes`,
+      icon: MessageCircle,
+    },
+    {
+      title: "Solicitudes internas",
+      text: "Consultas y registros internos sin lógica de compra.",
+      href: `/socio/club/${clubId}/solicitudes`,
+      icon: Archive,
+    },
+  ];
+
   return (
     <SocioShell clubId={clubId}>
-      <div className="max-w-6xl mx-auto">
-        <section className="bg-white border border-[#E5E1DA] rounded-[2rem] p-6 md:p-8 shadow-sm mb-8">
-          <p className="text-sm text-gray-500">Panel socio</p>
+      <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+        <section
+          style={{
+            background: "white",
+            border: "1px solid #E5E1DA",
+            borderRadius: 32,
+            padding: 32,
+            marginBottom: 28,
+            boxShadow: "0 8px 20px rgba(0,0,0,0.04)",
+          }}
+        >
+          <p style={{ margin: 0, fontSize: 14, color: "#6B7280" }}>Panel socio</p>
 
-          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-5">
-            <div>
-              <h1 className="text-4xl font-bold mt-1">
-                {club?.name ?? "Club"}
-              </h1>
+          <h1 style={{ margin: "8px 0 0", fontSize: 42, fontWeight: 800 }}>
+            {club?.name ?? "Club"}
+          </h1>
 
-              <p className="text-gray-500 mt-2 max-w-xl">
-                Espacio privado para socios registrados. Accedé a comunidad,
-                contenido, cuota social y comunicaciones internas.
-              </p>
-            </div>
+          <p style={{ color: "#6B7280", maxWidth: 650, marginTop: 10 }}>
+            Espacio privado para socios registrados. Accedé a comunidad, contenido,
+            cuota social y comunicaciones internas.
+          </p>
 
-            <div className="rounded-2xl bg-[#FBF9F6] px-4 py-3">
-              <p className="text-xs text-gray-500">Estado</p>
-              <p className="font-semibold capitalize">
-                {membership?.status ?? "activo"}
-              </p>
-            </div>
+          <div
+            style={{
+              marginTop: 22,
+              display: "inline-block",
+              background: "#F8F4EC",
+              border: "1px solid #E5E1DA",
+              borderRadius: 18,
+              padding: "12px 18px",
+            }}
+          >
+            <p style={{ margin: 0, fontSize: 12, color: "#6B7280" }}>Estado</p>
+            <p style={{ margin: 0, fontWeight: 700, textTransform: "capitalize" }}>
+              {membership?.status ?? "active"}
+            </p>
           </div>
         </section>
 
-        <section className="grid md:grid-cols-2 xl:grid-cols-3 gap-5">
-          <Link
-            href={`/socio/club/${clubId}/comunidad`}
-            className="bg-[#76A889] text-white rounded-3xl p-6 shadow-sm hover:shadow-md transition"
-          >
-            <Users size={26} />
-            <h2 className="font-bold text-xl mt-4">Comunidad</h2>
-            <p className="text-sm opacity-90 mt-2">
-              Publicaciones internas, comentarios y participación privada.
-            </p>
-            <ArrowRight className="mt-5" />
-          </Link>
+        <section
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
+            gap: 20,
+          }}
+        >
+          {cards.map((card) => {
+            const Icon = card.icon;
 
-          <Link
-            href={`/socio/club/${clubId}/biblioteca`}
-            className="bg-white border border-[#E5E1DA] rounded-3xl p-6 shadow-sm hover:shadow-md transition"
-          >
-            <BookOpen size={26} className="text-[#76A889]" />
-            <h2 className="font-bold text-xl mt-4">Biblioteca</h2>
-            <p className="text-sm text-gray-500 mt-2">
-              Guías, documentos, contenido educativo y cultura interna.
-            </p>
-            <ArrowRight className="mt-5 text-[#76A889]" />
-          </Link>
+            return (
+              <Link
+                key={card.href}
+                href={card.href}
+                style={{
+                  display: "block",
+                  textDecoration: "none",
+                  background: card.primary ? "#76A889" : "white",
+                  color: card.primary ? "white" : "#172033",
+                  border: card.primary ? "1px solid #76A889" : "1px solid #E5E1DA",
+                  borderRadius: 28,
+                  padding: 26,
+                  boxShadow: "0 8px 20px rgba(0,0,0,0.04)",
+                }}
+              >
+                <Icon size={30} color={card.primary ? "white" : "#76A889"} />
 
-          <Link
-            href={`/socio/club/${clubId}/cuota`}
-            className="bg-white border border-[#E5E1DA] rounded-3xl p-6 shadow-sm hover:shadow-md transition"
-          >
-            <CreditCard size={26} className="text-[#76A889]" />
-            <h2 className="font-bold text-xl mt-4">Cuota social</h2>
-            <p className="text-sm text-gray-500 mt-2">
-              Estado de cuota, vencimiento e historial de pagos.
-            </p>
-            <ArrowRight className="mt-5 text-[#76A889]" />
-          </Link>
+                <h2 style={{ margin: "18px 0 8px", fontSize: 22, fontWeight: 800 }}>
+                  {card.title}
+                </h2>
 
-          <Link
-            href={`/socio/club/${clubId}/mensajes`}
-            className="bg-white border border-[#E5E1DA] rounded-3xl p-6 shadow-sm hover:shadow-md transition"
-          >
-            <MessageCircle size={26} className="text-[#76A889]" />
-            <h2 className="font-bold text-xl mt-4">Mensajes</h2>
-            <p className="text-sm text-gray-500 mt-2">
-              Comunicación privada entre el socio y el club.
-            </p>
-            <ArrowRight className="mt-5 text-[#76A889]" />
-          </Link>
+                <p
+                  style={{
+                    margin: 0,
+                    color: card.primary ? "rgba(255,255,255,0.9)" : "#6B7280",
+                    fontSize: 14,
+                    lineHeight: 1.5,
+                  }}
+                >
+                  {card.text}
+                </p>
 
-          <Link
-            href={`/socio/club/${clubId}/solicitudes`}
-            className="bg-white border border-[#E5E1DA] rounded-3xl p-6 shadow-sm hover:shadow-md transition"
-          >
-            <Archive size={26} className="text-[#76A889]" />
-            <h2 className="font-bold text-xl mt-4">Solicitudes internas</h2>
-            <p className="text-sm text-gray-500 mt-2">
-              Consultas y registros internos sin lógica de compra.
-            </p>
-            <ArrowRight className="mt-5 text-[#76A889]" />
-          </Link>
+                <ArrowRight
+                  style={{ marginTop: 20 }}
+                  color={card.primary ? "white" : "#76A889"}
+                />
+              </Link>
+            );
+          })}
         </section>
       </div>
     </SocioShell>
