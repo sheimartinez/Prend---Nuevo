@@ -1,61 +1,49 @@
-import { getClubSettings, upsertClubSettings } from "./actions";
+import { createClient } from "@/lib/supabase/server";
+import { upsertClubSettings } from "./actions";
 
-export default async function ClubSettingsPage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
-  const { id } = await params;
-  const settings = await getClubSettings(id);
+export default async function SettingsPage({ params }: any) {
+  const supabase = await createClient();
+
+  const { data } = await supabase
+    .from("club_settings")
+    .select("*")
+    .eq("club_id", params.id)
+    .single();
 
   return (
-    <div className="p-6 max-w-2xl">
-      <h1 className="text-2xl font-bold mb-6">Configuración del Club</h1>
+    <div className="p-6 max-w-xl space-y-4">
+      <h1 className="text-xl font-bold">Configuración visual</h1>
 
-      <form action={upsertClubSettings} className="space-y-4">
-        <input type="hidden" name="club_id" value={id} />
+      <form action={upsertClubSettings} className="space-y-3">
+        <input type="hidden" name="club_id" value={params.id} />
 
-        <div>
-          <label className="block text-sm">Nombre visible</label>
-          <input
-            name="display_name"
-            defaultValue={settings?.display_name || ""}
-            className="w-full border p-2 rounded"
-          />
-        </div>
+        <input
+          name="display_name"
+          placeholder="Nombre visible"
+          defaultValue={data?.display_name || ""}
+          className="input"
+        />
 
-        <div>
-          <label className="block text-sm">Logo URL</label>
-          <input
-            name="logo_url"
-            defaultValue={settings?.logo_url || ""}
-            className="w-full border p-2 rounded"
-          />
-        </div>
+        <input
+          name="logo_url"
+          placeholder="Logo URL"
+          defaultValue={data?.logo_url || ""}
+          className="input"
+        />
 
-        <div className="flex gap-4">
-          <div>
-            <label className="block text-sm">Color principal</label>
-            <input
-              type="color"
-              name="primary_color"
-              defaultValue={settings?.primary_color || "#16a34a"}
-            />
-          </div>
+        <input
+          name="primary_color"
+          type="color"
+          defaultValue={data?.primary_color || "#76A889"}
+        />
 
-          <div>
-            <label className="block text-sm">Color secundario</label>
-            <input
-              type="color"
-              name="secondary_color"
-              defaultValue={settings?.secondary_color || "#0f172a"}
-            />
-          </div>
-        </div>
+        <input
+          name="secondary_color"
+          type="color"
+          defaultValue={data?.secondary_color || "#1E293B"}
+        />
 
-        <button className="bg-black text-white px-4 py-2 rounded">
-          Guardar cambios
-        </button>
+        <button className="btn">Guardar</button>
       </form>
     </div>
   );
