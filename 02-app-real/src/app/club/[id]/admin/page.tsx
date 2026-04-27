@@ -75,6 +75,13 @@ export default async function ClubAdminPage({
       icon: CreditCard,
       tag: "Suscripción",
     },
+    {
+      title: "Estado del plan",
+      text: "Ver plan activo, estado de suscripción y acceso premium del club.",
+      href: `/club/${id}/subscription`,
+      icon: CreditCard,
+      tag: "Comercial",
+    },
   ];
 
   return (

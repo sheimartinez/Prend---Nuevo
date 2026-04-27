@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowLeft, Palette } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { getClubSettings, upsertClubSettings } from "./actions";
+import { getClubSubscription } from "@/lib/getClubSubscription";
 
 export default async function ClubSettingsPage({
   params,
@@ -12,6 +13,7 @@ export default async function ClubSettingsPage({
   const supabase = await createClient();
 
   const settings = await getClubSettings(id);
+  const subscription = await getClubSubscription(id);
 
   const { data: club } = await supabase
     .from("clubs")
@@ -23,6 +25,35 @@ export default async function ClubSettingsPage({
   const logoUrl = settings?.logo_url || "";
   const primaryColor = settings?.primary_color || "#76A889";
   const secondaryColor = settings?.secondary_color || "#1E293B";
+
+  if (!subscription.isPersonalizado) {
+  return (
+    <main className="prende-page">
+      <div className="prende-container">
+        <div className="prende-card">
+          <span className="prende-pill">Plan Personalizado</span>
+
+          <h1 className="prende-title">Personalización avanzada</h1>
+
+          <p className="prende-subtitle">
+            Logo, colores e identidad visual avanzada están disponibles para el
+            Plan Personalizado.
+          </p>
+
+          <div className="mt-6 flex gap-3">
+            <a href={`/club/${id}/billing`} className="prende-btn">
+              Activar plan
+            </a>
+
+            <a href={`/club/${id}/admin`} className="prende-btn-secondary">
+              Volver al panel
+            </a>
+          </div>
+        </div>
+      </div>
+    </main>
+  );
+}
 
   return (
     <main className="prende-page">
