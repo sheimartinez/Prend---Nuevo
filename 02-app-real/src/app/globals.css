@@ -1,6 +1,4 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
 :root {
   --prende-bg: #fbf9f6;
@@ -38,6 +36,7 @@ select {
 }
 
 button {
+  cursor: pointer;
   transition: all 0.2s ease;
 }
 
@@ -53,40 +52,59 @@ button {
   padding: 32px 24px;
 }
 
-.prende-narrow {
-  width: 100%;
-  max-width: 760px;
-  margin: 0 auto;
-  padding: 32px 24px;
+.prende-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--prende-primary-dark);
+  font-size: 14px;
+  font-weight: 700;
 }
 
 .prende-kicker {
   display: inline-flex;
-  align-items: center;
   border: 1px solid var(--prende-border);
-  background: var(--prende-surface);
+  background: white;
   color: var(--prende-muted);
   border-radius: 999px;
   padding: 8px 14px;
   font-size: 13px;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .prende-title {
   margin-top: 16px;
-  font-size: 34px;
+  font-size: 42px;
   line-height: 1.1;
-  font-weight: 800;
-  letter-spacing: -0.03em;
-  color: var(--prende-text);
+  font-weight: 900;
+  letter-spacing: -0.04em;
 }
 
 .prende-subtitle {
-  margin-top: 10px;
-  max-width: 680px;
+  margin-top: 12px;
   color: var(--prende-muted);
-  font-size: 15px;
-  line-height: 1.6;
+  font-size: 16px;
+  line-height: 1.65;
+  max-width: 760px;
+}
+
+.prende-hero {
+  margin-top: 24px;
+  border: 1px solid var(--prende-border);
+  border-radius: 28px;
+  padding: 42px;
+  background: white;
+  box-shadow: 0 18px 50px rgba(15, 23, 42, 0.05);
+}
+
+.prende-section {
+  margin-top: 28px;
+}
+
+.prende-section-title {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--prende-text);
 }
 
 .prende-grid {
@@ -94,16 +112,8 @@ button {
   gap: 16px;
 }
 
-.prende-grid-2 {
-  display: grid;
-  gap: 16px;
-}
-
-.prende-grid-3 {
-  display: grid;
-  gap: 16px;
-}
-
+.prende-grid-2,
+.prende-grid-3,
 .prende-grid-4 {
   display: grid;
   gap: 16px;
@@ -125,10 +135,10 @@ button {
 
 .prende-card {
   display: block;
-  background: var(--prende-surface);
+  background: white;
   border: 1px solid var(--prende-border);
   border-radius: 22px;
-  padding: 22px;
+  padding: 26px;
   box-shadow: 0 10px 30px rgba(15, 23, 42, 0.04);
 }
 
@@ -143,7 +153,7 @@ button {
 
 .prende-card-title {
   font-size: 17px;
-  font-weight: 700;
+  font-weight: 800;
   color: var(--prende-text);
 }
 
@@ -154,18 +164,70 @@ button {
   line-height: 1.5;
 }
 
+.prende-icon-box {
+  width: 48px;
+  height: 48px;
+  border-radius: 16px;
+  background: var(--prende-soft);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.prende-pill {
+  display: inline-flex;
+  border-radius: 999px;
+  padding: 5px 10px;
+  background: var(--prende-soft);
+  color: var(--prende-primary-dark);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.prende-label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--prende-text);
+}
+
+.prende-input,
+.prende-select,
+.prende-textarea {
+  width: 100%;
+  border: 1px solid var(--prende-border);
+  background: white;
+  color: var(--prende-text);
+  border-radius: 14px;
+  padding: 12px 14px;
+  outline: none;
+  min-height: 46px;
+}
+
+.prende-textarea {
+  min-height: 96px;
+  resize: vertical;
+}
+
+.prende-input:focus,
+.prende-select:focus,
+.prende-textarea:focus {
+  border-color: var(--prende-primary);
+  box-shadow: 0 0 0 3px rgba(118, 168, 137, 0.16);
+}
+
 .prende-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-radius: 12px;
-  padding: 10px 16px;
+  border-radius: 14px;
+  padding: 12px 18px;
   background: var(--prende-primary);
   color: white;
   font-size: 14px;
-  font-weight: 700;
+  font-weight: 800;
   border: 0;
-  cursor: pointer;
 }
 
 .prende-btn:hover {
@@ -176,64 +238,29 @@ button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-radius: 12px;
-  padding: 10px 16px;
+  border-radius: 14px;
+  padding: 12px 18px;
   background: white;
   color: var(--prende-text);
   font-size: 14px;
-  font-weight: 700;
+  font-weight: 800;
   border: 1px solid var(--prende-border);
-  cursor: pointer;
 }
 
 .prende-btn-danger {
   color: var(--prende-danger);
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 700;
   background: transparent;
   border: 0;
-  cursor: pointer;
-}
-
-.prende-input,
-.prende-select,
-.prende-textarea {
-  width: 100%;
-  border: 1px solid var(--prende-border);
-  background: white;
-  color: var(--prende-text);
-  border-radius: 12px;
-  padding: 11px 12px;
-  outline: none;
-}
-
-.prende-input:focus,
-.prende-select:focus,
-.prende-textarea:focus {
-  border-color: var(--prende-primary);
-  box-shadow: 0 0 0 3px rgba(118, 168, 137, 0.15);
-}
-
-.prende-label {
-  display: block;
-  margin-bottom: 6px;
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--prende-text);
-}
-
-.prende-help {
-  margin-top: 6px;
-  font-size: 12px;
-  color: var(--prende-muted);
 }
 
 .prende-alert {
   border: 1px solid #fecaca;
   background: var(--prende-danger-soft);
   color: #991b1b;
-  border-radius: 18px;
-  padding: 16px;
+  border-radius: 22px;
+  padding: 18px;
   font-size: 14px;
 }
 
@@ -241,38 +268,9 @@ button {
   border: 1px solid #bbf7d0;
   background: #f0fdf4;
   color: #166534;
-  border-radius: 18px;
-  padding: 16px;
-  font-size: 14px;
-}
-
-.prende-stat {
-  background: white;
-  border: 1px solid var(--prende-border);
-  border-radius: 18px;
+  border-radius: 22px;
   padding: 18px;
-}
-
-.prende-stat-label {
-  color: var(--prende-muted);
-  font-size: 13px;
-}
-
-.prende-stat-value {
-  margin-top: 4px;
-  font-size: 28px;
-  font-weight: 800;
-  color: var(--prende-text);
-}
-
-.prende-section {
-  margin-top: 28px;
-}
-
-.prende-section-title {
-  font-size: 21px;
-  font-weight: 800;
-  color: var(--prende-text);
+  font-size: 14px;
 }
 
 .prende-empty {
@@ -281,21 +279,4 @@ button {
   color: var(--prende-muted);
   border-radius: 18px;
   padding: 20px;
-}
-
-.prende-pill {
-  display: inline-flex;
-  align-items: center;
-  border-radius: 999px;
-  padding: 5px 10px;
-  background: var(--prende-soft);
-  color: var(--prende-primary-dark);
-  font-size: 12px;
-  font-weight: 700;
-}
-
-.prende-divider {
-  height: 1px;
-  background: var(--prende-border);
-  margin: 18px 0;
 }
