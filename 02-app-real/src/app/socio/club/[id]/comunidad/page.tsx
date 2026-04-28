@@ -28,12 +28,47 @@ export default function ComunidadPage({
     });
   }
 
-  function getName(profile: any, fallback?: string) {
-    return profile?.full_name || profile?.email || fallback || "Socio";
+  function getDisplayName(profile: any, fallback?: string) {
+    return profile?.username || fallback || "socio";
   }
 
   function getInitial(name: string) {
     return String(name || "S").charAt(0).toUpperCase();
+  }
+
+  function Avatar({ profile, fallback }: { profile: any; fallback?: string }) {
+    const name = getDisplayName(profile, fallback);
+
+    return (
+      <div
+        style={{
+          width: 44,
+          height: 44,
+          borderRadius: "50%",
+          background: "#12372A",
+          color: "white",
+          display: "grid",
+          placeItems: "center",
+          fontWeight: 800,
+          overflow: "hidden",
+          flexShrink: 0,
+        }}
+      >
+        {profile?.avatar_url ? (
+          <img
+            src={profile.avatar_url}
+            alt={name}
+            style={{
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+            }}
+          />
+        ) : (
+          getInitial(name)
+        )}
+      </div>
+    );
   }
 
   async function loadData() {
@@ -77,7 +112,10 @@ export default function ComunidadPage({
     const allUserIds = Array.from(new Set([...postUserIds, ...commentUserIds]));
 
     const { data: profilesData } = allUserIds.length
-      ? await supabase.from("profiles").select("*").in("id", allUserIds)
+      ? await supabase
+          .from("profiles")
+          .select("id, username, avatar_url")
+          .in("id", allUserIds)
       : { data: [] };
 
     const merged =
@@ -283,7 +321,7 @@ export default function ComunidadPage({
           )}
 
           {posts.map((post) => {
-            const postName = getName(post.profile, user?.email);
+            const postName = getDisplayName(post.profile, user?.email);
             const liked = post.likes.some(
               (l: any) => l.user_id === user?.id
             );
@@ -300,23 +338,12 @@ export default function ComunidadPage({
                 }}
               >
                 <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
-                  <div
-                    style={{
-                      width: 44,
-                      height: 44,
-                      borderRadius: "50%",
-                      background: "#12372A",
-                      color: "white",
-                      display: "grid",
-                      placeItems: "center",
-                      fontWeight: 800,
-                    }}
-                  >
-                    {getInitial(postName)}
-                  </div>
+                  <Avatar profile={post.profile} fallback={user?.email} />
 
                   <div>
-                    <p style={{ margin: 0, fontWeight: 800 }}>{postName}</p>
+                    <p style={{ margin: 0, fontWeight: 800 }}>
+                      @{postName}
+                    </p>
                     <p style={{ margin: 0, fontSize: 12, color: "#6B7280" }}>
                       {formatDate(post.created_at)}
                     </p>
@@ -383,9 +410,9 @@ export default function ComunidadPage({
                 {post.comments.length > 0 && (
                   <div style={{ marginTop: 16, display: "grid", gap: 9 }}>
                     {post.comments.map((comment: any) => {
-                      const commentName = getName(
+                      const commentName = getDisplayName(
                         comment.profile,
-                        comment.user_id === user?.id ? user?.email : "Socio"
+                        comment.user_id === user?.id ? user?.email : "socio"
                       );
 
                       return (
@@ -396,28 +423,34 @@ export default function ComunidadPage({
                             border: "1px solid #E5E1DA",
                             borderRadius: 16,
                             padding: "10px 12px",
+                            display: "flex",
+                            gap: 10,
                           }}
                         >
-                          <p
-                            style={{
-                              margin: 0,
-                              fontSize: 13,
-                              fontWeight: 800,
-                              color: "#172033",
-                            }}
-                          >
-                            {commentName}
-                          </p>
-                          <p
-                            style={{
-                              margin: "4px 0 0",
-                              fontSize: 14,
-                              color: "#374151",
-                              lineHeight: 1.4,
-                            }}
-                          >
-                            {comment.content}
-                          </p>
+                          <Avatar profile={comment.profile} fallback={commentName} />
+
+                          <div>
+                            <p
+                              style={{
+                                margin: 0,
+                                fontSize: 13,
+                                fontWeight: 800,
+                                color: "#172033",
+                              }}
+                            >
+                              @{commentName}
+                            </p>
+                            <p
+                              style={{
+                                margin: "4px 0 0",
+                                fontSize: 14,
+                                color: "#374151",
+                                lineHeight: 1.4,
+                              }}
+                            >
+                              {comment.content}
+                            </p>
+                          </div>
                         </div>
                       );
                     })}

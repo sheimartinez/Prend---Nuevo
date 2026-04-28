@@ -24,12 +24,42 @@ export async function POST(request: Request) {
 
   const payment = await paymentClient.get({ id: String(paymentId) });
 
+  const paymentType = payment.metadata?.type;
+  const status = payment.status;
+
+  /**
+   * Pago de cuota social del socio
+   */
+  if (paymentType === "member_fee") {
+    const feeId = payment.external_reference || payment.metadata?.fee_id;
+
+    if (!feeId) {
+      return NextResponse.json({ ok: true });
+    }
+
+    if (status === "approved") {
+      await supabase
+        .from("member_fees")
+        .update({
+          status: "pagada",
+          paid_at: new Date().toISOString(),
+          mercado_pago_payment_id: String(payment.id),
+          updated_at: new Date().toISOString(),
+        })
+        .eq("id", feeId);
+    }
+
+    return NextResponse.json({ ok: true });
+  }
+
+  /**
+   * Pago de plan SaaS del club/admin
+   */
   const subscriptionId =
     payment.external_reference || payment.metadata?.subscription_id;
 
   const clubId = payment.metadata?.club_id;
   const plan = payment.metadata?.plan;
-  const status = payment.status;
 
   if (!subscriptionId || !clubId) {
     return NextResponse.json({ ok: true });
