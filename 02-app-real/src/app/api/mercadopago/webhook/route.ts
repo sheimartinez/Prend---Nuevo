@@ -1,44 +1,66 @@
 import { MercadoPagoConfig, Payment } from "mercadopago";
 import { NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
+import { createClient } from "@supabase/supabase-js";
+
+const supabaseAdmin = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
+);
 
 export async function POST(request: Request) {
-  const supabase = await createClient();
-  const body = await request.json();
+  try {
+    const body = await request.json();
+    const token = process.env.MERCADO_PAGO_ACCESS_TOKEN;
 
-  const token = process.env.MERCADO_PAGO_ACCESS_TOKEN;
+    if (!token) {
+      console.error("Falta MERCADO_PAGO_ACCESS_TOKEN");
+      return NextResponse.json({ ok: false });
+    }
 
-  if (!token) {
-    return NextResponse.json({ ok: false }, { status: 500 });
-  }
+    const client = new MercadoPagoConfig({ accessToken: token });
+    const paymentClient = new Payment(client);
 
-  const paymentId =
-    body?.data?.id || body?.id || new URL(request.url).searchParams.get("id");
+    const url = new URL(request.url);
 
-  if (!paymentId) {
-    return NextResponse.json({ ok: true });
-  }
+    let paymentId =
+      body?.data?.id ||
+      body?.id ||
+      url.searchParams.get("data.id") ||
+      url.searchParams.get("id");
 
-  const client = new MercadoPagoConfig({ accessToken: token });
-  const paymentClient = new Payment(client);
+    const topic = body?.type || body?.topic || url.searchParams.get("topic");
 
-  const payment = await paymentClient.get({ id: String(paymentId) });
+    if (topic === "merchant_order" && body?.resource) {
+      const orderResponse = await fetch(body.resource, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
-  const paymentType = payment.metadata?.type;
-  const status = payment.status;
+      const order = await orderResponse.json();
+      paymentId = order?.payments?.[0]?.id;
+    }
 
-  /**
-   * Pago de cuota social del socio
-   */
-  if (paymentType === "member_fee") {
-    const feeId = payment.external_reference || payment.metadata?.fee_id;
-
-    if (!feeId) {
+    if (!paymentId) {
       return NextResponse.json({ ok: true });
     }
 
-    if (status === "approved") {
-      await supabase
+    const payment = await paymentClient.get({ id: String(paymentId) });
+
+    const status = payment.status;
+    const metadata: any = payment.metadata || {};
+    const feeId = payment.external_reference || metadata.fee_id;
+
+    console.log("MP PAYMENT RECEIVED:", {
+      paymentId: payment.id,
+      status,
+      feeId,
+      metadata,
+      external_reference: payment.external_reference,
+    });
+
+    if (status === "approved" && feeId) {
+      const { error } = await supabaseAdmin
         .from("member_fees")
         .update({
           status: "pagada",
@@ -46,52 +68,16 @@ export async function POST(request: Request) {
           mercado_pago_payment_id: String(payment.id),
           updated_at: new Date().toISOString(),
         })
-        .eq("id", feeId);
+        .eq("id", String(feeId));
+
+      if (error) {
+        console.error("ERROR UPDATING MEMBER FEE:", error);
+      }
     }
 
     return NextResponse.json({ ok: true });
+  } catch (error) {
+    console.error("WEBHOOK ERROR:", error);
+    return NextResponse.json({ ok: false });
   }
-
-  /**
-   * Pago de plan SaaS del club/admin
-   */
-  const subscriptionId =
-    payment.external_reference || payment.metadata?.subscription_id;
-
-  const clubId = payment.metadata?.club_id;
-  const plan = payment.metadata?.plan;
-
-  if (!subscriptionId || !clubId) {
-    return NextResponse.json({ ok: true });
-  }
-
-  await supabase.from("payments").insert({
-    club_id: clubId,
-    subscription_id: subscriptionId,
-    plan,
-    amount: payment.transaction_amount,
-    currency: payment.currency_id || "UYU",
-    status,
-    mercado_pago_payment_id: String(payment.id),
-    raw_payload: payment as any,
-  });
-
-  if (status === "approved") {
-    const now = new Date();
-    const periodEnd = new Date();
-    periodEnd.setMonth(periodEnd.getMonth() + 1);
-
-    await supabase
-      .from("subscriptions")
-      .update({
-        status: "active",
-        mercado_pago_payment_id: String(payment.id),
-        current_period_start: now.toISOString(),
-        current_period_end: periodEnd.toISOString(),
-        updated_at: now.toISOString(),
-      })
-      .eq("id", subscriptionId);
-  }
-
-  return NextResponse.json({ ok: true });
 }
