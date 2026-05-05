@@ -9,6 +9,7 @@ import {
   CheckCircle,
   AlertCircle,
   User,
+  BadgeAlert,
 } from "lucide-react";
 
 export default function SocioHomePage() {
@@ -83,9 +84,9 @@ export default function SocioHomePage() {
   }
 
   function getStatus(status?: string) {
-    if (status === "activa" || status === "pagada") {
+    if (status === "pagada" || status === "activa") {
       return {
-        label: "Activa",
+        label: "Pagada",
         bg: "#ECFDF3",
         color: "#166534",
         icon: <CheckCircle size={18} />,
@@ -107,6 +108,11 @@ export default function SocioHomePage() {
       color: "#9A3412",
       icon: <AlertCircle size={18} />,
     };
+  }
+
+  function getFeeLabel(type?: string) {
+    if (type === "inscription") return "Matrícula";
+    return "Cuota mensual";
   }
 
   if (loading) {
@@ -134,9 +140,22 @@ export default function SocioHomePage() {
     );
   }
 
-  const currentFee = fees[0];
-  const status = getStatus(currentFee?.status);
   const username = profile?.username || user?.email || "socio";
+
+  const pendingInscription = fees.find(
+    (fee) =>
+      fee.type === "inscription" &&
+      (fee.status === "pendiente" || fee.status === "vencida")
+  );
+
+  const currentMonthlyFee =
+    fees.find(
+      (fee) =>
+        fee.type !== "inscription" &&
+        (fee.status === "pendiente" || fee.status === "vencida")
+    ) || fees.find((fee) => fee.type !== "inscription");
+
+  const monthlyStatus = getStatus(currentMonthlyFee?.status);
 
   return (
     <SocioShell clubId={membership.club_id}>
@@ -189,6 +208,55 @@ export default function SocioHomePage() {
           </div>
         </section>
 
+        {pendingInscription && (
+          <section
+            style={{
+              background: "#FFF7ED",
+              border: "1px solid #FED7AA",
+              borderRadius: 24,
+              padding: 18,
+              marginBottom: 24,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              gap: 16,
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+              <BadgeAlert size={24} color="#9A3412" />
+              <div>
+                <p
+                  style={{
+                    margin: 0,
+                    fontWeight: 800,
+                    color: "#9A3412",
+                  }}
+                >
+                  Matrícula pendiente
+                </p>
+                <p style={{ margin: "4px 0 0", color: "#9A3412", fontSize: 14 }}>
+                  Pago único de ingreso · ${pendingInscription.amount} UYU
+                </p>
+              </div>
+            </div>
+
+            <a
+              href={`/api/create-preference?clubId=${membership.club_id}&type=member_fee&feeId=${pendingInscription.id}`}
+              style={{
+                background: "#9A3412",
+                color: "white",
+                padding: "12px 18px",
+                borderRadius: 16,
+                textDecoration: "none",
+                fontWeight: 800,
+                whiteSpace: "nowrap",
+              }}
+            >
+              Pagar matrícula
+            </a>
+          </section>
+        )}
+
         <section
           style={{
             background: "white",
@@ -215,117 +283,131 @@ export default function SocioHomePage() {
 
             <div>
               <p style={{ margin: 0, color: "#6B7280", fontSize: 13 }}>
-                Cuota social
+                Pago mensual
               </p>
               <h2 style={{ margin: 0, fontSize: 30, fontWeight: 800 }}>
-                Estado de cuenta
+                Cuota mensual
               </h2>
             </div>
           </div>
 
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-              gap: 16,
-              marginTop: 24,
-            }}
-          >
-            <div
-              style={{
-                background: "#FBF9F6",
-                border: "1px solid #E5E1DA",
-                borderRadius: 22,
-                padding: 18,
-              }}
-            >
-              <p style={{ margin: 0, color: "#6B7280", fontSize: 13 }}>
-                Estado actual
-              </p>
-
+          {currentMonthlyFee ? (
+            <>
               <div
                 style={{
-                  marginTop: 10,
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: 8,
-                  background: status.bg,
-                  color: status.color,
-                  borderRadius: 999,
-                  padding: "8px 12px",
-                  fontWeight: 800,
+                  display: "grid",
+                  gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+                  gap: 16,
+                  marginTop: 24,
                 }}
               >
-                {status.icon}
-                {status.label}
+                <div
+                  style={{
+                    background: "#FBF9F6",
+                    border: "1px solid #E5E1DA",
+                    borderRadius: 22,
+                    padding: 18,
+                  }}
+                >
+                  <p style={{ margin: 0, color: "#6B7280", fontSize: 13 }}>
+                    Estado actual
+                  </p>
+
+                  <div
+                    style={{
+                      marginTop: 10,
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: 8,
+                      background: monthlyStatus.bg,
+                      color: monthlyStatus.color,
+                      borderRadius: 999,
+                      padding: "8px 12px",
+                      fontWeight: 800,
+                    }}
+                  >
+                    {monthlyStatus.icon}
+                    {monthlyStatus.label}
+                  </div>
+                </div>
+
+                <div
+                  style={{
+                    background: "#FBF9F6",
+                    border: "1px solid #E5E1DA",
+                    borderRadius: 22,
+                    padding: 18,
+                  }}
+                >
+                  <p style={{ margin: 0, color: "#6B7280", fontSize: 13 }}>
+                    Vencimiento
+                  </p>
+
+                  <p
+                    style={{
+                      margin: "10px 0 0",
+                      fontSize: 22,
+                      fontWeight: 800,
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 8,
+                    }}
+                  >
+                    <Calendar size={20} />
+                    {formatDate(currentMonthlyFee.due_date)}
+                  </p>
+                </div>
+
+                <div
+                  style={{
+                    background: "#FBF9F6",
+                    border: "1px solid #E5E1DA",
+                    borderRadius: 22,
+                    padding: 18,
+                  }}
+                >
+                  <p style={{ margin: 0, color: "#6B7280", fontSize: 13 }}>
+                    Importe informado
+                  </p>
+
+                  <p
+                    style={{
+                      margin: "10px 0 0",
+                      fontSize: 22,
+                      fontWeight: 800,
+                    }}
+                  >
+                    ${currentMonthlyFee.amount} UYU
+                  </p>
+                </div>
               </div>
-            </div>
 
-            <div
-              style={{
-                background: "#FBF9F6",
-                border: "1px solid #E5E1DA",
-                borderRadius: 22,
-                padding: 18,
-              }}
-            >
-              <p style={{ margin: 0, color: "#6B7280", fontSize: 13 }}>
-                Vencimiento
-              </p>
-
-              <p
-                style={{
-                  margin: "10px 0 0",
-                  fontSize: 22,
-                  fontWeight: 800,
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 8,
-                }}
-              >
-                <Calendar size={20} />
-                {formatDate(currentFee?.due_date)}
-              </p>
-            </div>
-
-            <div
-              style={{
-                background: "#FBF9F6",
-                border: "1px solid #E5E1DA",
-                borderRadius: 22,
-                padding: 18,
-              }}
-            >
-              <p style={{ margin: 0, color: "#6B7280", fontSize: 13 }}>
-                Importe informado
-              </p>
-
-              <p style={{ margin: "10px 0 0", fontSize: 22, fontWeight: 800 }}>
-                {currentFee?.amount ? `$${currentFee.amount} UYU` : "Sin importe"}
-              </p>
-            </div>
-          </div>
-
-          {(currentFee?.status === "pendiente" ||
-            currentFee?.status === "vencida") && (
-            <a
-              href={`/api/create-preference?clubId=${membership.club_id}&type=member_fee`}
-              style={{
-                display: "block",
-                marginTop: 22,
-                width: "100%",
-                background: "#76A889",
-                color: "white",
-                textAlign: "center",
-                textDecoration: "none",
-                borderRadius: 18,
-                padding: 15,
-                fontWeight: 800,
-                boxSizing: "border-box",
-              }}
-            >
-              Pagar cuota social
-            </a>
+              {(currentMonthlyFee.status === "pendiente" ||
+                currentMonthlyFee.status === "vencida") && (
+                <a
+                  href={`/api/create-preference?clubId=${membership.club_id}&type=member_fee&feeId=${currentMonthlyFee.id}`}
+                  style={{
+                    display: "block",
+                    marginTop: 22,
+                    width: "100%",
+                    background: "#76A889",
+                    color: "white",
+                    textAlign: "center",
+                    textDecoration: "none",
+                    borderRadius: 18,
+                    padding: 15,
+                    fontWeight: 800,
+                    boxSizing: "border-box",
+                  }}
+                >
+                  Pagar cuota mensual
+                </a>
+              )}
+            </>
+          ) : (
+            <p style={{ marginTop: 18, color: "#6B7280" }}>
+              No hay cuota mensual cargada para este período.
+            </p>
           )}
         </section>
 
@@ -338,12 +420,12 @@ export default function SocioHomePage() {
           }}
         >
           <h2 style={{ margin: 0, fontSize: 26, fontWeight: 800 }}>
-            Historial de cuotas
+            Historial de pagos
           </h2>
 
           {fees.length === 0 ? (
             <p style={{ marginTop: 14, color: "#6B7280" }}>
-              Todavía no hay registros de cuota social.
+              Todavía no hay registros de pagos.
             </p>
           ) : (
             <div style={{ marginTop: 18, display: "grid", gap: 12 }}>
@@ -364,7 +446,7 @@ export default function SocioHomePage() {
                   >
                     <div>
                       <p style={{ margin: 0, fontWeight: 800 }}>
-                        Cuota social
+                        {getFeeLabel(fee.type)}
                       </p>
                       <p
                         style={{
